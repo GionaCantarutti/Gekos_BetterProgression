@@ -3,6 +3,7 @@
         "enableAlgorithmicalRebalancing": true,
         "clampToMaxLevel": false,
         "ammoRules": {
+            "enable": true,
             "logChanges": false,
             "globalDelta": 0,
             "ammoBaseLoyaltyByPen": [
@@ -115,6 +116,12 @@
                     "loyaltyDelta": 4
                 }
             ]
+        
+        },
+        "weaponRules": {
+            "enable": true,
+            "logChanges": false,
+            "globalDelta": 0
         }
     }
 }
