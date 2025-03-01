@@ -145,24 +145,85 @@
 
             //Base loyalty score of each weapon is decided by its caliber. If the caliber of the weapon is not listed below then the default value will be picked
             //Loyalty score is then further modified by the other rules
-            "defaultBaseLoyalty": 1,
+            "defaultBaseLoyalty": 2,
             "weaponBaseLoyaltyByCaliber": [
                 {
                     "caliber": "Caliber762x51",
-                    "baseLoyalty": 3
+                    "baseLoyalty": 3.7
                 },
                 {
                     "caliber": "Caliber556x45NATO",
-                    "baseLoyalty": 2
+                    "baseLoyalty": 2.5
                 },
                 {
                     "caliber": "Caliber545x39",
-                    "baseLoyalty": 2
+                    "baseLoyalty": 2.5
                 },
                 {
                     "caliber": "Caliber762x39",
+                    "baseLoyalty": 2.5
+                },
+                {
+                    "caliber": "Caliber57x28",
+                    "baseLoyalty": 3
+                },
+                {
+                    "caliber": "Caliber46x30",
+                    "baseLoyalty": 3
+                },
+                {
+                    "caliber": "Caliber9x19PARA",
+                    "baseLoyalty": 1
+                },
+                {
+                    "caliber": "Caliber366TKM",
                     "baseLoyalty": 2
+                },
+                {
+                    "caliber": "Caliber9x39",
+                    "baseLoyalty": 3
+                },
+                {
+                    "caliber": "Caliber127x55",
+                    "baseLoyalty": 3.5
+                },
+                {
+                    "caliber": "Caliber23x75",
+                    "baseLoyalty": 5
+                },
+                {
+                    "caliber": "Caliber9x18PM",
+                    "baseLoyalty": 1
+                },
+                {
+                    "caliber": "Caliber9x18PMM",
+                    "baseLoyalty": 1
+                },
+                {
+                    "caliber": "Caliber762x25TT",
+                    "baseLoyalty": 1
+                },
+                {
+                    "caliber": "Caliber86x70",
+                    "baseLoyalty": 5
+                },
+                {
+                    "caliber": "Caliber1143x23ACP",
+                    "baseLoyalty": 2
+                },
+                {
+                    "caliber": "Caliber762x54R",
+                    "baseLoyalty": 3.5
+                },
+                {
+                    "caliber": "Caliber68x51",
+                    "baseLoyalty": 4.5
+                },
+                {
+                    "caliber": "Caliber127x33",
+                    "baseLoyalty": 4
                 }
+                
             ],
 
             //Modify the loyalty score depending on the BEST fire mode available to the weapon
@@ -185,6 +246,23 @@
                 {
                     "mode" : "fullauto",
                     "delta" : 0
+                }
+            ],
+
+            //If the fire rate of a weapon falls within one (or more) of the intervals then its loyalty score will be modified by the corresponding delta
+            //THIS ONLY AFFECTS FULL AUTO AND BURST WEAPONS
+            "fireRateRules": [
+                {
+                    "rateInterval": [0, 620],
+                    "delta": -0.7
+                },
+                {
+                    "rateInterval": [0, 750],
+                    "delta": -0.5
+                },
+                {
+                    "rateInterval": [1050, 99999],
+                    "delta": 1
                 }
             ]
         }
