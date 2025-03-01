@@ -1,11 +1,23 @@
 {
+    //Module responsible for algorithmically rebalancing most military items in the game
+    //This module calculates a loyalty score for each item that can also be decimal. The actual in-game loyalty level of the item will be the floor of the loyalty score. So for example a loyalty score of 3.8 will correspond to loyalty level 3
     "algorithmicalRebalancing": {
-        "enableAlgorithmicalRebalancing": true,
+        "enable": true,
+
+        //If false items that end up having a loyalty score greater or equal than 5 will be hidden (level >4 traders do not exist)
+        //If it true items with loyalty over 4 will be brought back to 4
         "clampToMaxLevel": false,
+        
+        //Ammo rebalancing module
         "ammoRules": {
             "enable": true,
-            "logChanges": false,
+            "logChanges": false, //For debugging
+
+            //Change every ammunition loyalty level by this much
             "globalDelta": 0,
+            
+            //If an ammunition falls between the ammunition ranges specified here then it will get the corresponding base loyalty score
+            //Loyalty score is then further modified by the other rules
             "ammoBaseLoyaltyByPen": [
                 {
                     "penInterval": [0, 14],
@@ -40,6 +52,8 @@
                     "baseLoyalty": 5
                 }
             ],
+
+            //Modify the loyalty score of an ammunition depending on its caliber
             "caliberRules": [
                 {
                     "caliber": "Caliber12g",
@@ -90,6 +104,8 @@
                     "loyaltyDelta": -2
                 }
             ],
+
+            //If the damage of an ammunition falls within one (or more) of the intervals then its loyalty score will be modified by the corresponding delta
             "damageRules": [
                 {
                     "damageInterval": [85, 90],
@@ -118,10 +134,59 @@
             ]
         
         },
+
+        //Weapons rebalancing module
         "weaponRules": {
             "enable": true,
-            "logChanges": false,
-            "globalDelta": 0
+            "logChanges": false, //For debugging
+
+            //Change every ammunition loyalty level by this much
+            "globalDelta": 0,
+
+            //Base loyalty score of each weapon is decided by its caliber. If the caliber of the weapon is not listed below then the default value will be picked
+            //Loyalty score is then further modified by the other rules
+            "defaultBaseLoyalty": 1,
+            "weaponBaseLoyaltyByCaliber": [
+                {
+                    "caliber": "Caliber762x51",
+                    "baseLoyalty": 3
+                },
+                {
+                    "caliber": "Caliber556x45NATO",
+                    "baseLoyalty": 2
+                },
+                {
+                    "caliber": "Caliber545x39",
+                    "baseLoyalty": 2
+                },
+                {
+                    "caliber": "Caliber762x39",
+                    "baseLoyalty": 2
+                }
+            ],
+
+            //Modify the loyalty score depending on the BEST fire mode available to the weapon
+            //Manual includes bolt-action, pump-action and single-shot
+            //Semiauto includes semi automatic, double-action and double barrel
+            //Fullauto and burst are self-explanatory
+            "fireModeRules": [
+                {
+                    "mode" : "manual",
+                    "delta" : -2
+                },
+                {
+                    "mode" : "semiauto",
+                    "delta" : -1
+                },
+                {
+                    "mode" : "burst",
+                    "delta" : -0.5
+                },
+                {
+                    "mode" : "fullauto",
+                    "delta" : 0
+                }
+            ]
         }
     }
 }
