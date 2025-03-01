@@ -1,0 +1,120 @@
+{
+    "algorithmicalRebalancing": {
+        "enableAlgorithmicalRebalancing": true,
+        "clampToMaxLevel": false,
+        "ammoRules": {
+            "logChanges": false,
+            "globalDelta": 0,
+            "ammoBaseLoyaltyByPen": [
+                {
+                    "penInterval": [0, 14],
+                    "baseLoyalty": 0.5
+                },
+                {
+                    "penInterval": [14, 18],
+                    "baseLoyalty": 1
+                },
+                {
+                    "penInterval": [18, 20],
+                    "baseLoyalty": 1.5
+                },
+                {
+                    "penInterval": [20, 29],
+                    "baseLoyalty": 2
+                },
+                {
+                    "penInterval": [29, 32],
+                    "baseLoyalty": 2.6
+                },
+                {
+                    "penInterval": [32, 40],
+                    "baseLoyalty": 3
+                },
+                {
+                    "penInterval": [40, 48],
+                    "baseLoyalty": 4
+                },
+                {
+                    "penInterval": [48, 99999],
+                    "baseLoyalty": 5
+                }
+            ],
+            "caliberRules": [
+                {
+                    "caliber": "Caliber12g",
+                    "loyaltyDelta": -2
+                },
+                {
+                    "caliber": "Caliber762x54R",
+                    "loyaltyDelta": -2
+                },
+                {
+                    "caliber": "Caliber762x39",
+                    "loyaltyDelta": -0.5
+                },
+                {
+                    "caliber": "Caliber762x51",
+                    "loyaltyDelta": -1
+                },
+                {
+                    "caliber": "Caliber20g",
+                    "loyaltyDelta": -3
+                },
+                {
+                    "caliber": "Caliber366TKM",
+                    "loyaltyDelta": -1.5
+                },
+                {
+                    "caliber": "Caliber9x19PARA",
+                    "loyaltyDelta": 1.4
+                },
+                {
+                    "caliber": "Caliber9x18PM",
+                    "loyaltyDelta": 1
+                },
+                {
+                    "caliber": "Caliber127x55",
+                    "loyaltyDelta": -1
+                },
+                {
+                    "caliber": "Caliber9x21",
+                    "loyaltyDelta": 0.5
+                },
+                {
+                    "caliber": "Caliber752x25TT",
+                    "loyaltyDelta": 0.5
+                },
+                {
+                    "caliber": "Caliber86x70",
+                    "loyaltyDelta": -2
+                }
+            ],
+            "damageRules": [
+                {
+                    "damageInterval": [85, 90],
+                    "loyaltyDelta": 0.5
+                },
+                {
+                    "damageInterval": [90, 100],
+                    "loyaltyDelta": 1
+                },
+                {
+                    "damageInterval": [100, 120],
+                    "loyaltyDelta": 1.5
+                },
+                {
+                    "damageInterval": [120, 255],
+                    "loyaltyDelta": 2
+                },
+                {
+                    "damageInterval": [255, 360],
+                    "loyaltyDelta": 3
+                },
+                {
+                    "damageInterval": [360, 9999],
+                    "loyaltyDelta": 4
+                }
+            ]
+        }
+    }
+}
