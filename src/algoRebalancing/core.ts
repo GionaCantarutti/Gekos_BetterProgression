@@ -2,6 +2,7 @@ import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { DependencyContainer } from "tsyringe";
 import { Context } from "../contex";
 import { calculateAmmoLoyalty } from "./ammo";
+import { calculateWeaponLoyalty } from "./weapon";
 import { setLoyalty } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
 
@@ -30,13 +31,29 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
 
         for (const item of itemsForSale)
         {
-            if (config.ammoRules.enable && itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO))
+            let newLoyalty : number = 0;
+            let logChange: boolean = false;
+            let shouldChange: boolean = false;
+
+            if (config.ammoRules.enable
+                && itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO))
             {
-                const newLoyalty = calculateAmmoLoyalty(item, context.tables, config.ammoRules);
-                if (config.ammoRules.logChanges) context.logger.info("Setting " + context.tables.templates.items[item._tpl]._name + " at loyalty level " + newLoyalty);
-                setLoyalty(item._id, newLoyalty, trader, config.clampToMaxLevel);
+                newLoyalty = calculateAmmoLoyalty(item, context);
+                logChange = config.ammoRules.logChanges;
+                shouldChange = true;
             }
 
+            if (config.weaponRules.enable
+                && itemHelper.isOfBaseclass(item._tpl, BaseClasses.WEAPON)
+                && !itemHelper.isOfBaseclass(item._tpl, BaseClasses.SPECIAL_WEAPON)) //ToDo: double check melee and grenades (and possibly other exceptions)
+            {
+                newLoyalty = calculateWeaponLoyalty(item, context);
+                logChange = config.weaponRules.logChanges;
+                shouldChange = true;
+            }
+            
+            if (logChange) context.logger.info("Setting " + context.tables.templates.items[item._tpl]._name + " at loyalty level " + newLoyalty);
+            if (shouldChange) setLoyalty(item._id, newLoyalty, trader, config.clampToMaxLevel);
         }
 
     }

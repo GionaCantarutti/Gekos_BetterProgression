@@ -1,9 +1,12 @@
 import { IItem } from "@spt/models/eft/common/tables/IItem";
 import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
-import { IDatabaseTables } from "@spt/models/spt/server/IDatabaseTables";
+import { Context } from "../contex";
 
-export function calculateAmmoLoyalty(item: IItem, tables: IDatabaseTables, config: any): number
+export function calculateAmmoLoyalty(item: IItem, context: Context): number
 {
+
+    const config = context.config.algorithmicalRebalancing.ammoRules;
+    const tables = context.tables;
 
     const itemTemplate: ITemplateItem = tables.templates.items[item._tpl];
 

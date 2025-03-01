@@ -12,4 +12,35 @@ export function setLoyalty(itemID: string, loyalty: number, trader: ITrader, cap
 export function getModFolder(): string {
     return "./user/mods/Gekos_BetterProgression";
 }
+
+//Returns one of "manual", "semiauto" or "fullauto" depending on which is the best fire mode available between the provided choices
+export function bestFiremode(modes: string[], isManual: boolean): string
+{
+
+    const ranks: { [mode: string] : number } = 
+    {
+        "none" : -9999,
+        "manual" : 0,
+        "doublet" : 1,
+        "semiauto" : 1,
+        "doubleaction": 1,
+        "single" : isManual ? -100 : 1,
+        "burst" : 2,
+        "fullauto" : 3
+    };
+
+    let bestMode: string = "none";
+
+    for (const mode of modes)
+    {
+        if (ranks[bestMode] < ranks[mode]) bestMode = mode;
+    }
+    if (isManual) if (ranks[bestMode] < ranks["manual"]) bestMode = "manual";
+
+    //Rename for simplicity
+    if (bestMode == "manual" || bestMode == "pumpaction" || (isManual && bestMode == "single")) return "manual";
+    if (bestMode == "single" || bestMode == "doubleaction" || bestMode == "doublet") return "semiauto";
+
+    return bestMode;
+
 }
