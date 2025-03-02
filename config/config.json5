@@ -277,11 +277,14 @@
             //Loyalty level for shifting is checked after all other rules have already been applied.
             //The shifting applies recursively. This means that if, for example, three weapons of three different power levels all share the same niche and loyalty level then one will stay at that level, one will be shifted once and the other will be shifted twice
             "upshiftRules": [
-                "enabled": false,
+                "enabled": true,
                 "shiftAmount": 1,
 
                 //If true the worse weapon will be shifted down instead of the better one being shifted up
                 "shiftDownInstead": false,
+
+                //How many weapons of the same niche can be on the same loyalty level before a shift occurs?
+                "nicheOverlapTolerance": 1,
 
                 //How is a wapon niche defined for shifting?
                 "devideNicheByFiremode": true,      //If true weapons of different fire modes will be considered as parts of different niches. Only cares about the best available fire mode and only considers "manual", "semi auto", "burst" and "fullauto"
