@@ -270,6 +270,40 @@
                     "rateInterval": [1050, 99999],
                     "delta": 1
                 }
+            ],
+
+            //If multiple weapons share the same niche then the better ones will be upshifted to higher trader levels (how a niche is defined is configurable below)
+            //For example if both the UMP and the Vector.45 happen to both fall into loyalty level 3 then the Vector will be upshifted to level 4 (if the power level rules below define the Vector as a better weapon than the UMP and with default niche definition)
+            //Loyalty level for shifting is checked after all other rules have already been applied.
+            //The shifting applies recursively. This means that if, for example, three weapons of three different power levels all share the same niche and loyalty level then one will stay at that level, one will be shifted once and the other will be shifted twice
+            "upshiftRules": [
+                "enabled": false,
+                "shiftAmount": 1,
+
+                //If true the worse weapon will be shifted down instead of the better one being shifted up
+                "shiftDownInstead": false,
+
+                //How is a wapon niche defined for shifting?
+                "devideNicheByFiremode": true,      //If true weapons of different fire modes will be considered as parts of different niches. Only cares about the best available fire mode and only considers "manual", "semi auto", "burst" and "fullauto"
+                "devideNicheByCaliber": true,       //If true weapons of different calibers will be considered as parts of different niches
+                "devideNicheByBarterType": true,    //If true items sold for currency and items recieved from barters will be considered of two different niches
+                "devideNicheByQuestLock": true,     //If true items locked behind quests and items that aren't so will be considered of two different niches
+
+                //Power levels of weapons. This is used to determine which weapons are better than which others. Has only meaning in a relative sense (to define a order between weapons of same niche), the absolute value is meaningless.
+                //For example if we want to define the Vepr Hunter as a weaker weapon compared to the RSASS we only need to set their power levels so that the VPO's is lower, the actual numbers don't matter
+                //Once again, the power level is compared for a possible shift only between weapons that share the same caliber AND fire mode AND loyalty level
+                //For example the power level of the Vepr Hunter will never compared to that of the SCAR-H nor that of the STM-9
+                //If two weapons in the same niche and loyalty level have the same power level then neither will be shifted
+                "powerLevels": {
+                    //// SEMI-AUTO 7.62x51 ////
+                    "5c501a4d2e221602b412b540" : 0, //Vepr Hunter
+                    "5f2a9575926fd9352339381f" : 1, //RFB
+                    "5aafa857e5b5b00018480968" : 2, //M1A
+                    "6176aca650224f204c1da3fb" : 3, //G28
+                    "5a367e5dc4a282000e49738f" : 3, //RSASS
+                    "5df8ce05b11454561e39243b" : 3, //SR-25
+                }
+
             ]
         }
     }
