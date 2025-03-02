@@ -3,11 +3,28 @@ import { DependencyContainer } from "tsyringe";
 import { Context } from "../contex";
 import { calculateAmmoLoyalty } from "./ammo";
 import { calculateWeaponLoyalty } from "./weapon";
-import { isBarterTrade, isQuestLocked, setLoyalty } from "../utils";
+import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
+import { ITrader } from "@spt/models/eft/common/tables/ITrader";
+import { IItem } from "@spt/models/eft/common/tables/IItem";
+
+
 
 export function algorithmicallyRebalance(container: DependencyContainer, context: Context): void
 {
+    class ChangedItem
+    {
+        trade: IItem; score: number; trader: ITrader; logChange: boolean;
+
+        constructor(trade, score, trader, logChange)
+        {
+            this.trade = trade;
+            this.score = score;
+            this.trader = trader;
+            this.logChange = logChange;
+        }
+    }
+
     //Alias
     const config = context.config.algorithmicalRebalancing;
 
@@ -23,19 +40,26 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
         const itemsForSale = trader?.assort?.items;
         if (itemsForSale == null) continue;
 
+        //Organize changed items by loyalty level so that they can be easily accessed by the shifting system
+        //[trade, loyaltyScore, trader, logChanges][index][loyaltyLevel]
+        const changedItems: { [level: number] : ChangedItem[] } = {};
+
         for (const item of itemsForSale)
         {
-            let loyaltyScore : number = 0;
-            let logChange: boolean = false;
-            let shouldChange: boolean = false;
+            let thisItem: ChangedItem;
 
             //// AMMO ////
             if (config.ammoRules.enable
                 && itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO))
             {
-                loyaltyScore = calculateAmmoLoyalty(item, context);
-                logChange = config.ammoRules.logChanges;
-                shouldChange = true;
+                const loyaltyScore = calculateAmmoLoyalty(item, context);
+
+                thisItem = new ChangedItem(
+                    item,
+                    loyaltyScore,
+                    trader,
+                    config.ammoRules.logChanges
+                );
             }
 
             //// WEAPONS ////
@@ -43,31 +67,53 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
                 && itemHelper.isOfBaseclass(item._tpl, BaseClasses.WEAPON)
                 && !itemHelper.isOfBaseclass(item._tpl, BaseClasses.SPECIAL_WEAPON)) //ToDo: double check melee and grenades (and possibly other exceptions)
             {
-                loyaltyScore = calculateWeaponLoyalty(item, context);
-                logChange = config.weaponRules.logChanges;
-                shouldChange = true;
+                const loyaltyScore = calculateWeaponLoyalty(item, context);
+
+                thisItem = new ChangedItem(
+                    item,
+                    loyaltyScore,
+                    trader,
+                    config.weaponRules.logChanges
+                );
             }
 
-            if (shouldChange)
+            if (thisItem != null) //If item is being affected by the mod
             {
                 //Final modifications
                 if (isQuestLocked(item, trader)) 
                 {
-                    loyaltyScore += config.questLockDelta;
+                    thisItem.score += config.questLockDelta;
                     if (config.logBartersAndLocks) context.logger.info(context.tables.templates.items[item._tpl]._name + " is a quest-locked item\t(Trade ID: " + item._id + ")");
                 }
                 if (isBarterTrade(item, trader))
                 {
-                    loyaltyScore += config.barterDelta;
+                    thisItem.score += config.barterDelta;
                     if (config.logBartersAndLocks) context.logger.info(context.tables.templates.items[item._tpl]._name + " is a bartered item\t(Trade ID: " + item._id + ")");
                 }
 
-                //Apply change
-                if (logChange) context.logger.info("Setting " + context.tables.templates.items[item._tpl]._name + " at loyalty level " + loyaltyScore);
-                setLoyalty(item._id, loyaltyScore, trader, config.clampToMaxLevel);
+                const level = loyaltyFromScore(thisItem.score, config.clampToMaxLevel);
+                if (changedItems[level] == null)
+                {
+                    changedItems[level] = [thisItem];
+                }
+                else
+                {
+                    changedItems[level].push(thisItem);
+                }
+
             }
             
-            
+        }
+
+        //Apply changes
+        for (const changesInLevel of Object.values(changedItems))
+        {
+            if (changesInLevel == null || changesInLevel.length == 0) continue;
+            for (const changedItem of changesInLevel)
+            {
+                if (changedItem.logChange) context.logger.info(`Setting ${context.tables.templates.items[changedItem.trade._tpl]._name} at loyalty level ${loyaltyFromScore(changedItem.score, config.clampToMaxLevel)} (${changedItem.score})`);
+                setLoyalty(changedItem.trade._id, changedItem.score, trader, config.clampToMaxLevel);
+            }
         }
 
     }

@@ -9,13 +9,19 @@ const currencies: string[] = [
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
 
+export function loyaltyFromScore(score: number, capToMax: boolean): number
+{
+    const maxLevel = capToMax ? 4 : 999 //Set max level to a dummy value if config states that loyalty > 4 is to be hidden from all trader levels
+    return Math.max(1, Math.min(maxLevel, Math.floor(score))); //Floor and clamp between 1 and the max level
+}
+
 //Sets the loyalty level of the given sale item on the given trader
 //If capToMax is false the loyalty level will be allowed to go beyond 4
 export function setLoyalty(itemID: string, loyalty: number, trader: ITrader, capToMax: boolean): void
 {
     if (loyalty == null) loyalty = 0;
-    const maxLevel = capToMax ? 4 : 999 //Set max level to a dummy value if loyalty > 4 is to be hidden from all trader levels in config
-    trader.assort.loyal_level_items[itemID] = Math.max(1, Math.min(maxLevel, Math.floor(loyalty))); //Floor and clamp between 1 and the max level
+    
+    trader.assort.loyal_level_items[itemID] = loyaltyFromScore(loyalty, capToMax);
 }
 
 //Checks if the given trade item is offered for barter on the given trader

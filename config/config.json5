@@ -276,7 +276,7 @@
             //For example if both the UMP and the Vector.45 happen to both fall into loyalty level 3 then the Vector will be upshifted to level 4 (if the power level rules below define the Vector as a better weapon than the UMP and with default niche definition)
             //Loyalty level for shifting is checked after all other rules have already been applied.
             //The shifting applies recursively. This means that if, for example, three weapons of three different power levels all share the same niche and loyalty level then one will stay at that level, one will be shifted once and the other will be shifted twice
-            "upshiftRules": [
+            "upshiftRules": {
                 "enabled": true,
                 "shiftAmount": 1,
 
@@ -307,7 +307,7 @@
                     "5df8ce05b11454561e39243b" : 3, //SR-25
                 }
 
-            ]
+            }
         }
     }
 }
