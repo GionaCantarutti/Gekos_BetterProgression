@@ -21,4 +21,8 @@ export class Context
         this.config = _config;
     }
 
+    public logObject(object: any): void {
+        this.logger?.info(JSON.stringify(object, null, 2));
+    }
+
 }

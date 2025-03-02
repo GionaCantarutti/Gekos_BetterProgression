@@ -10,7 +10,7 @@ export function calculateAmmoLoyalty(item: IItem, context: Context): number
 
     const itemTemplate: ITemplateItem = tables.templates.items[item._tpl];
 
-    let loyalty: number = 0;
+    let loyalty: number = config.defaultBaseLoyaltyByPen;
 
     //Base level from penetration
     for (const rule of config.ammoBaseLoyaltyByPen)

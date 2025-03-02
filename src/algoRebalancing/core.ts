@@ -3,7 +3,7 @@ import { DependencyContainer } from "tsyringe";
 import { Context } from "../contex";
 import { calculateAmmoLoyalty } from "./ammo";
 import { calculateWeaponLoyalty } from "./weapon";
-import { setLoyalty } from "../utils";
+import { isBarterTrade, isQuestLocked, setLoyalty } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
 
 export function algorithmicallyRebalance(container: DependencyContainer, context: Context): void
@@ -51,9 +51,27 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
                 logChange = config.weaponRules.logChanges;
                 shouldChange = true;
             }
+
+            if (shouldChange)
+            {
+                //Final modifications
+                if (isQuestLocked(item, trader)) 
+                {
+                    newLoyalty += config.questLockDelta;
+                    if (config.logBartersAndLocks) context.logger.info(context.tables.templates.items[item._tpl]._name + " is a quest-locked item\t(Trade ID: " + item._id + ")");
+                }
+                if (isBarterTrade(item, trader))
+                {
+                    newLoyalty += config.barterDelta;
+                    if (config.logBartersAndLocks) context.logger.info(context.tables.templates.items[item._tpl]._name + " is a bartered item\t(Trade ID: " + item._id + ")");
+                }
+
+                //Apply change
+                if (logChange) context.logger.info("Setting " + context.tables.templates.items[item._tpl]._name + " at loyalty level " + newLoyalty);
+                setLoyalty(item._id, newLoyalty, trader, config.clampToMaxLevel);
+            }
             
-            if (logChange) context.logger.info("Setting " + context.tables.templates.items[item._tpl]._name + " at loyalty level " + newLoyalty);
-            if (shouldChange) setLoyalty(item._id, newLoyalty, trader, config.clampToMaxLevel);
+            
         }
 
     }

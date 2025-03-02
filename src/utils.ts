@@ -1,4 +1,13 @@
-import { ITrader } from "@spt/models/eft/common/tables/ITrader";
+import { IItem } from "@spt/models/eft/common/tables/IItem";
+import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
+
+const currencies: string[] = [
+    "5449016a4bdc2d6f028b456f", //Roubles
+    "5696686a4bdc2da3298b456a", //Dollars
+    "569668774bdc2da2298b4568", //Euroes
+    "5d235b4d86f7742e017bc88a", //GP Coin
+    "6656560053eaaa7a23349c86"  //Lega medal
+]
 
 //Sets the loyalty level of the given sale item on the given trader
 //If capToMax is false the loyalty level will be allowed to go beyond 4
@@ -9,6 +18,39 @@ export function setLoyalty(itemID: string, loyalty: number, trader: ITrader, cap
     trader.assort.loyal_level_items[itemID] = Math.max(1, Math.min(maxLevel, Math.floor(loyalty))); //Floor and clamp between 1 and the max level
 }
 
+//Checks if the given trade item is offered for barter on the given trader
+//Anything that can't be purchased for RUB, EUR, USD, GP or Lega Medals is considered a barter
+export function isBarterTrade(trade: IItem, trader: ITrader): boolean
+{
+    const scheme: IBarterScheme[][] = trader.assort.barter_scheme[trade._id];
+    if (scheme == null) return false;
+
+    for (const ask of scheme) for (const ask1 of ask) //Cursed, i know
+    {
+        if (!currencies.includes(ask1._tpl)) return true;
+    }
+
+    return false;
+}
+
+//Checks if the given trade item is quest locked on the given trader
+export function isQuestLocked(trade: IItem, trader: ITrader): boolean {
+
+    const questLocks = [
+        ...Object.keys(trader.questassort["success"]),
+        ...Object.keys(trader.questassort["started"]),
+        ...Object.keys(trader.questassort["fail"]) ];
+
+    for (const questLockedTrade of questLocks)
+    {
+        if (trade._id == questLockedTrade) return true;
+    }
+
+    return false;
+
+}
+
+//Returns the path to the mod folder
 export function getModFolder(): string {
     return "./user/mods/Gekos_BetterProgression";
 }

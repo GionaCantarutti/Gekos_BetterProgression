@@ -7,6 +7,11 @@
         //If false items that end up having a loyalty score greater or equal than 5 will be hidden (level >4 traders do not exist)
         //If it true items with loyalty over 4 will be brought back to 4
         "clampToMaxLevel": false,
+
+    	//Change the loyalty score of all items this mod affects (for example barter items are unaffected) by this much if the item trade is a barter or if it's quest locked
+        "barterDelta": -1,
+        "questLockDelta": -1,
+        "logBartersAndLocks": false, //For debugging
         
         //Ammo rebalancing module
         "ammoRules": {
@@ -18,6 +23,7 @@
             
             //If an ammunition falls between the ammunition ranges specified here then it will get the corresponding base loyalty score
             //Loyalty score is then further modified by the other rules
+            "defaultBaseLoyaltyByPen": 1,
             "ammoBaseLoyaltyByPen": [
                 {
                     "penInterval": [0, 14],
