@@ -283,9 +283,6 @@
                 //If true the worse weapon will be shifted down instead of the better one being shifted up
                 "shiftDownInstead": false,
 
-                //How many weapons of the same niche can be on the same loyalty level before a shift occurs?
-                "nicheOverlapTolerance": 1,
-
                 //How is a wapon niche defined for shifting?
                 "devideNicheByFiremode": true,      //If true weapons of different fire modes will be considered as parts of different niches. Only cares about the best available fire mode and only considers "manual", "semi auto", "burst" and "fullauto"
                 "devideNicheByCaliber": true,       //If true weapons of different calibers will be considered as parts of different niches
@@ -299,8 +296,8 @@
                 //If two weapons in the same niche and loyalty level have the same power level then neither will be shifted
                 "powerLevels": {
                     //// SEMI-AUTO 7.62x51 ////
-                    "5c501a4d2e221602b412b540" : 0, //Vepr Hunter
-                    "5f2a9575926fd9352339381f" : 1, //RFB
+                    "5c501a4d2e221602b412b540" : 1, //Vepr Hunter
+                    "5f2a9575926fd9352339381f" : 2, //RFB
                     "5aafa857e5b5b00018480968" : 2, //M1A
                     "6176aca650224f204c1da3fb" : 3, //G28
                     "5a367e5dc4a282000e49738f" : 3, //RSASS

@@ -1,5 +1,7 @@
 import { IItem } from "@spt/models/eft/common/tables/IItem";
+import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
+import { Context } from "./contex";
 
 const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
@@ -8,6 +10,36 @@ const currencies: string[] = [
     "5d235b4d86f7742e017bc88a", //GP Coin
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
+
+export function shareSameNiche(a: IItem, b: IItem, aTrader: ITrader, bTrader: ITrader, context: Context) : boolean
+{
+    const c = context.config.algorithmicalRebalancing.weaponRules.upshiftRules;
+
+    const aTempl = context.tables.templates.items[a._tpl];
+    const bTempl = context.tables.templates.items[b._tpl];
+
+    if (c.devideNicheByFiremode)
+    {
+        if (bestFiremode(aTempl) != bestFiremode(bTempl)) return false;
+    }
+
+    if (c.devideNicheByCaliber)
+    {
+        if (aTempl._props.ammoCaliber != bTempl._props.ammoCaliber) return false;
+    }
+
+    if (c.devideNicheByBarterType)
+    {
+        if (isBarterTrade(a, aTrader) != isBarterTrade(b, bTrader)) return false;
+    }
+
+    if (c.devideNicheByQuestLock)
+    {
+        if (isQuestLocked(a, aTrader) != isQuestLocked(b, bTrader)) return false;
+    }
+
+    return true;
+}
 
 export function loyaltyFromScore(score: number, capToMax: boolean): number
 {
@@ -61,9 +93,20 @@ export function getModFolder(): string {
     return "./user/mods/Gekos_BetterProgression";
 }
 
-//Returns one of "manual", "semiauto" or "fullauto" depending on which is the best fire mode available between the provided choices
-export function bestFiremode(modes: string[], isManual: boolean): string
+export function bestFiremode(item: ITemplateItem): string
 {
+    const res = pickBestFiremode(item._props.weapFireType, item._props.BoltAction || !item._props.CanQueueSecondShot);
+    if (res == "") console.log(item);
+    return res;
+}
+
+//Returns one of "manual", "semiauto" or "fullauto" depending on which is the best fire mode available between the provided choices
+export function pickBestFiremode(modes: string[], isManual: boolean): string
+{
+    if (modes == null)
+    {
+        return "";
+    }
 
     const ranks: { [mode: string] : number } = 
     {

@@ -2,7 +2,7 @@ import { IItem } from "@spt/models/eft/common/tables/IItem";
 import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { IDatabaseTables } from "@spt/models/spt/server/IDatabaseTables";
 import { Context } from "../contex";
-import { bestFiremode } from "../utils";
+import { bestFiremode, pickBestFiremode } from "../utils";
 
 export function calculateWeaponLoyalty(item: IItem, context: Context): number
 {
@@ -10,7 +10,7 @@ export function calculateWeaponLoyalty(item: IItem, context: Context): number
     const tables = context.tables;
 
     const itemTemplate: ITemplateItem = tables.templates.items[item._tpl];
-    const fireMode = bestFiremode(itemTemplate._props.weapFireType, itemTemplate._props.BoltAction || !itemTemplate._props.CanQueueSecondShot);
+    const fireMode = bestFiremode(itemTemplate);
     const fireRate = itemTemplate._props.bFirerate;
     let loyalty: number = config.defaultBaseLoyalty;
 
