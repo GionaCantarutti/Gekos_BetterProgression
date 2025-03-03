@@ -150,7 +150,7 @@
         //Weapons rebalancing module
         "weaponRules": {
             "enable": true,
-            "logChanges": false, //For debugging
+            "logChanges": true, //For debugging
 
             //Change every ammunition loyalty level by this much
             "globalDelta": 0,
@@ -310,6 +310,20 @@
                     "5df8ce05b11454561e39243b" : 3, //SR-25
                 }
 
+            }
+        },
+
+        //Ignore all previous calculations and set the given items or trades to the given levels
+        //Items and trades specified here will also be ignored by all other systems (for example they won't count for the shifting system)
+        "explicitLoyaltyOverride": {
+            //ID of the specific trade, NOT the id of the item being sold
+            "trades": {
+
+            },
+            //ID of the item being sold
+            "items": {
+                "627e14b21713922ded6f2c15": 4, //AXMC
+                "5991b51486f77447b112d44f": 4
             }
         }
     },

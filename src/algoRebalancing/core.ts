@@ -34,6 +34,8 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
 
         for (const item of itemsForSale)
         {
+            if (Object.keys(config.explicitLoyaltyOverride.trades).includes(item._id)) continue;
+            if (Object.keys(config.explicitLoyaltyOverride.items).includes(item._tpl)) continue;
             let thisItem: ChangedItem;
 
             //// AMMO ////
@@ -109,4 +111,28 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
             setLoyalty(changedItem.trade._id, changedItem.score, changedItem.trader, config.clampToMaxLevel);
         }
     }
+
+    //Overrides
+    for (const trader of traders)
+    {
+        const loyaltyLevels = trader?.assort?.loyal_level_items;
+        if (loyaltyLevels == null) continue;
+
+        const itemsForSale = trader?.assort?.items;
+        if (itemsForSale == null) continue;
+
+        if (config.excludeTraders.includes(trader.base._id)) continue;
+
+        for (const item of trader.assort.items)
+        {
+            let override: number | null = null;
+            override = config.explicitLoyaltyOverride.trades[item._id];
+            if (override == null) override = config.explicitLoyaltyOverride.items[item._tpl];
+            if (override == null) continue;
+            
+            setLoyalty(item._id, override, trader, config.clampToMaxLevel);
+        }
+    }
+
+    
 }

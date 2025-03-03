@@ -52,15 +52,15 @@ export function weaponShifting(changedItems: { [level: number] : ChangedItem[] }
 
         if (changesInLevel == null || changesInLevel.length == 0) continue;
 
-        const toShift: number[] = [];
+        const toShift: Set<number> = new Set<number>();
 
         for (let i = 0; i < changesInLevel.length; i++)
         {
-            if (toShift.includes(i)) continue;
+            if (toShift.has(i)) continue;
             if (!changesInLevel[i].isWeapon) continue;
-            for (let j = i; j < changesInLevel.length; j++)
+            for (let j = i + 1; j < changesInLevel.length; j++)
             {
-                if (toShift.includes(j)) continue;
+                if (toShift.has(j)) continue;
                 if (!changesInLevel[j].isWeapon) continue;
 
                 const a = changesInLevel[i]; const b = changesInLevel[j];
@@ -74,29 +74,32 @@ export function weaponShifting(changedItems: { [level: number] : ChangedItem[] }
 
                     if (aPowerLevel < bPowerLevel)
                     {
-                        toShift.push(reverse ? i : j);
+                        toShift.add(reverse ? i : j);
                     }
                     else
                     {
-                        toShift.push(reverse ? j : i);
+                        toShift.add(reverse ? j : i);
                     }
                 }
 
             }
         }
 
-        for (const index of toShift)
+        context.logObject(toShift);
+
+        for (const shiftIndex of toShift)
         {
-            const change = changesInLevel[index];
+            const change = changesInLevel[shiftIndex];
             change.score += config.weaponRules.upshiftRules.shiftAmount * (reverse ? -1 : 1);
             const newLevel = loyaltyFromScore(change.score, config.clampToMaxLevel);
+            changedItems[keys[index]] = changedItems[keys[index]].filter(item => item.trade._id != change.trade._id);
             if (changedItems[newLevel] == null)
             {
                 changedItems[newLevel] = [change];
             }
             else
             {
-                changedItems[newLevel].push(change); //No need to remove from current level since it won't be read again anyway
+                changedItems[newLevel].push(change);
             }
         }
         
