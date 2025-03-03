@@ -277,7 +277,7 @@
             //Loyalty level for shifting is checked after all other rules have already been applied.
             //The shifting applies recursively. This means that if, for example, three weapons of three different power levels all share the same niche and loyalty level then one will stay at that level, one will be shifted once and the other will be shifted twice
             "upshiftRules": {
-                "enabled": true,
+                "enable": true,
                 "shiftAmount": 1,
 
                 //If true the worse weapon will be shifted down instead of the better one being shifted up

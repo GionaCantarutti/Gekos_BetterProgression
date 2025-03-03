@@ -2,29 +2,16 @@ import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { DependencyContainer } from "tsyringe";
 import { Context } from "../contex";
 import { calculateAmmoLoyalty } from "./ammo";
-import { calculateWeaponLoyalty } from "./weapon";
+import { calculateWeaponLoyalty, weaponShifting as shiftWeapons } from "./weapon";
 import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty, shareSameNiche } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
 import { ITrader } from "@spt/models/eft/common/tables/ITrader";
 import { IItem } from "@spt/models/eft/common/tables/IItem";
-
-
+import { ChangedItem } from "./types";
 
 export function algorithmicallyRebalance(container: DependencyContainer, context: Context): void
 {
-    class ChangedItem
-    {
-        trade: IItem; score: number; trader: ITrader; logChange: boolean; isWeapon: boolean;
-
-        constructor(trade, score, trader, logChange, isWeapon)
-        {
-            this.trade = trade;
-            this.score = score;
-            this.trader = trader;
-            this.logChange = logChange;
-            this.isWeapon = isWeapon;
-        }
-    }
+    
 
     //Alias
     const config = context.config.algorithmicalRebalancing;
@@ -112,61 +99,7 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
 
     }
 
-    //Shifting system
-    //WARNING!!! HORRIBLE CODE AHEAD!!!
-    for (const changesInLevel of Object.values(changedItems))
-    {
-        if (changesInLevel == null || changesInLevel.length == 0) continue;
-
-        const toShift: number[] = [];
-
-        for (let i = 0; i < changesInLevel.length; i++)
-        {
-            if (toShift.includes(i)) continue;
-            if (!changesInLevel[i].isWeapon) continue;
-            for (let j = i; j < changesInLevel.length; j++)
-            {
-                if (toShift.includes(j)) continue;
-                if (!changesInLevel[j].isWeapon) continue;
-
-                const a = changesInLevel[i]; const b = changesInLevel[j];
-
-                if (shareSameNiche(a.trade, b.trade, a.trader, b.trader, context))
-                {
-                    const aPowerLevel = config.weaponRules.upshiftRules.powerLevels[a.trade._tpl];
-                    const bPowerLevel = config.weaponRules.upshiftRules.powerLevels[b.trade._tpl];
-
-                    if (aPowerLevel == null || bPowerLevel == null || aPowerLevel == bPowerLevel) continue;
-
-                    if (aPowerLevel < bPowerLevel)
-                    {
-                        toShift.push(j);
-                    }
-                    else
-                    {
-                        toShift.push(i);
-                    }
-                }
-
-            }
-        }
-
-        for (const index of toShift)
-        {
-            const change = changesInLevel[index];
-            change.score += config.weaponRules.upshiftRules.shiftAmount;
-            const newLevel = loyaltyFromScore(change.score, config.clampToMaxLevel);
-            if (changedItems[newLevel] == null)
-            {
-                changedItems[newLevel] = [change];
-            }
-            else
-            {
-                changedItems[newLevel].push(change); //No need to remove from current level since it won't be read again anyway
-            }
-        }
-        
-    }
+    if (config.weaponRules.upshiftRules.enable) shiftWeapons(changedItems, context);
 
     //Apply changes
     for (const changesInLevel of Object.values(changedItems))
