@@ -11,8 +11,6 @@ import { ChangedItem } from "./types";
 
 export function algorithmicallyRebalance(container: DependencyContainer, context: Context): void
 {
-    
-
     //Alias
     const config = context.config.algorithmicalRebalancing;
 
@@ -32,7 +30,7 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
         const itemsForSale = trader?.assort?.items;
         if (itemsForSale == null) continue;
 
-        
+        if (config.excludeTraders.includes(trader.base._id)) continue;
 
         for (const item of itemsForSale)
         {

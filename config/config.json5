@@ -12,6 +12,12 @@
         "barterDelta": -1,
         "questLockDelta": -1,
         "logBartersAndLocks": false, //For debugging
+
+        //Traders that will not be affected by the rebalancing module
+        "excludeTraders": [
+            "579dc571d53a0658a154fbec", //Fence
+            "6617beeaa9cfa777ca915b7c", //Ref
+        ],
         
         //Ammo rebalancing module
         "ammoRules": {
