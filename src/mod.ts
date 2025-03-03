@@ -31,6 +31,12 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         this.context.tables = this.context.database.getTables();
 
         if (this.context.config.algorithmicalRebalancing.enable) algorithmicallyRebalance(container, this.context);
+
+        //Change stack sizes
+        for (const [item, stackSize] of Object.entries(this.context.config.misc.stackSizeOverride as Record<string, number>))
+        {
+            this.context.tables.templates.items[item]._props.StackMaxSize = stackSize;
+        }
         
     }
 }
