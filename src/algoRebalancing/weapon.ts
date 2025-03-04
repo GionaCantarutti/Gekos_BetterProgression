@@ -84,9 +84,7 @@ export function weaponShifting(changedItems: { [level: number] : ChangedItem[] }
 
             }
         }
-
-        context.logObject(toShift);
-
+        
         for (const shiftIndex of toShift)
         {
             const change = changesInLevel[shiftIndex];

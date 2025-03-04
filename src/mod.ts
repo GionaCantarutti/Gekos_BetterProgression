@@ -6,6 +6,7 @@ import { DatabaseServer } from "@spt/servers/DatabaseServer";
 import { ILogger } from "@spt/models/spt/utils/ILogger";
 import { Context } from "./contex";
 import { algorithmicallyRebalance } from "./algoRebalancing/core";
+import { applySecureContainerChanges } from "./miscChanges/secureContainer";
 import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import { getModFolder } from "./utils";
 
@@ -37,6 +38,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         {
             this.context.tables.templates.items[item]._props.StackMaxSize = stackSize;
         }
+
+        if (this.context.config.misc.secureContainerProgression.enable) applySecureContainerChanges(this.context);
         
     }
 }
