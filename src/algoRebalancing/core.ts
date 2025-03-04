@@ -107,8 +107,10 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
         if (changesInLevel == null || changesInLevel.length == 0) continue;
         for (const changedItem of changesInLevel)
         {
-            if (changedItem.logChange) context.logger.info(`Setting ${context.tables.templates.items[changedItem.trade._tpl]._name} at loyalty level ${loyaltyFromScore(changedItem.score, config.clampToMaxLevel)} (${changedItem.score})`);
-            setLoyalty(changedItem.trade._id, changedItem.score, changedItem.trader, config.clampToMaxLevel);
+            let doClamp: boolean = config.clampToMaxLevel;
+            if (config.forceClampingOfQuestlockedItems && isQuestLocked(changedItem.trade, changedItem.trader)) doClamp = true;
+            if (changedItem.logChange) context.logger.info(`Setting ${context.tables.templates.items[changedItem.trade._tpl]._name} at loyalty level ${loyaltyFromScore(changedItem.score, doClamp)} (${changedItem.score})`);
+            setLoyalty(changedItem.trade._id, changedItem.score, changedItem.trader, doClamp);
         }
     }
 
