@@ -341,6 +341,15 @@
         //More options can be found in the advanced config folder in the secureChanges.json5 file
     },
 
+    "fleaMarketChanges": {
+        "disableFleaMarket": true,
+
+        //Even if the flea market is disabled the following items will still be sold (and sellable) on it
+        "fleaWhitelist": [
+
+        ]
+    },
+
     //Stash changes
     "stashProgression" : {
         "enable": true,

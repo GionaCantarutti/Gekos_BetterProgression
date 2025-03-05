@@ -10,6 +10,7 @@ import { applySecureContainerChanges } from "./miscChanges/secureContainer";
 import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import { getModFolder } from "./utils";
 import { changeStashProgression } from "./miscChanges/stashChanges";
+import { disableFleaMarket } from "./miscChanges/fleaChanges";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -43,6 +44,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         if (this.context.config.secureContainerProgression.enable) applySecureContainerChanges(this.context);
         
         if (this.context.config.stashProgression.enable) changeStashProgression(this.context);
+
+        if (this.context.config.fleaMarketChanges.disableFleaMarket) disableFleaMarket(this.context);
     }
 }
 
