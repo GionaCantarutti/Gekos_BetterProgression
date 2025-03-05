@@ -37,12 +37,12 @@ export function applySecureContainerChanges(context: Context): void
         const bearContainer = profile.bear.character.Inventory.items.find((x) => x.slotId === "SecuredContainer")
         if (bearContainer)
         {
-            bearContainer._tpl = context.config.misc.secureContainerProgression.starterContainer;
+            bearContainer._tpl = context.config.secureContainerProgression.starterContainer;
         }
         const usecContainer = profile.usec.character.Inventory.items.find((x) => x.slotId === "SecuredContainer")
         if (usecContainer)
         {
-            usecContainer._tpl = context.config.misc.secureContainerProgression.starterContainer;
+            usecContainer._tpl = context.config.secureContainerProgression.starterContainer;
         }
     }
     

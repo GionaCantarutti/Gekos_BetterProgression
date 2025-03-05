@@ -9,6 +9,7 @@ import { algorithmicallyRebalance } from "./algoRebalancing/core";
 import { applySecureContainerChanges } from "./miscChanges/secureContainer";
 import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import { getModFolder } from "./utils";
+import { changeStashProgression } from "./miscChanges/stashChanges";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -39,8 +40,9 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
             this.context.tables.templates.items[item]._props.StackMaxSize = stackSize;
         }
 
-        if (this.context.config.misc.secureContainerProgression.enable) applySecureContainerChanges(this.context);
+        if (this.context.config.secureContainerProgression.enable) applySecureContainerChanges(this.context);
         
+        if (this.context.config.stashProgression.enable) changeStashProgression(this.context);
     }
 }
 
