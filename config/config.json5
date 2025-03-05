@@ -1,6 +1,15 @@
+//// GEKO'S BETTER PROGRESSION CONFIGURATION FILE ////
+//
+// Welcome to the config file. Nearly everything this mod does can be disabled or tweaked to your liking.
+// You can find IDs for items and other things on https://moxopixel.com/tarkynator/. Failing that you can explore the SPT_Data/Server/database folder in your SPT installation to find the ID you need
+// A few times "Deltas" are mentioned in this config file. Delta is a fancy word to mean "change", a negative delta will reduce a value and a positive one will increase it
+// If you encounter any bugs please do let me know either on the GitHub page or as a comment on the SPT Hub page for the mod
+//
+
 {
     //Module responsible for algorithmically rebalancing most military items in the game
     //This module calculates a loyalty score for each item that can also be decimal. The actual in-game loyalty level of the item will be the floor of the loyalty score. So for example a loyalty score of 3.8 will correspond to loyalty level 3
+    //The exact way in which this works will become more apparent by looking at the specific rules for each class of items (for example the ammoRules)
     "algorithmicalRebalancing": {
         "enable": true,
 
@@ -312,6 +321,19 @@
                     "5df8ce05b11454561e39243b" : 3, //SR-25
                 }
 
+            }
+        },
+
+        //Modify loyalty score of the given items by the given amount
+        //This only affects items that are already affected by at least one other algorithmical rebalancing module (so items such as ammo if ammo rebalancing is enabled)
+        "explicitLoyaltyDelta": {
+            //ID of the specific trade, NOT the id of the item being sold
+            "trades": {
+
+            },
+            //ID of the item being sold
+            "items": {
+                
             }
         },
 

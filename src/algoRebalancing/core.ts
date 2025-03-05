@@ -82,6 +82,11 @@ export function algorithmicallyRebalance(container: DependencyContainer, context
                     thisItem.score += config.barterDelta;
                     if (config.logBartersAndLocks) context.logger.info(context.tables.templates.items[item._tpl]._name + " is a bartered item\t(Trade ID: " + item._id + ")");
                 }
+                //Explicit deltas
+                const tradeD = config.explicitLoyaltyDelta.trades[thisItem.trade._id];
+                const itemD = config.explicitLoyaltyDelta.items[thisItem.trade._tpl];
+                if (!isNaN(tradeD)) thisItem.score += tradeD;
+                if (!isNaN(itemD)) thisItem.score += itemD;
 
                 const level = loyaltyFromScore(thisItem.score, config.clampToMaxLevel);
                 if (changedItems[level] == null)
