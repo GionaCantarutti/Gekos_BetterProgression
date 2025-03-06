@@ -352,7 +352,7 @@
     },
 
     //Apply changes to secure containers and the ways to obtain them
-    //Most safe container have been made slightly bigger (2 to 4 extra slots on each)
+    //Most safe containers have been made slightly bigger (2 to 4 extra slots on each)
     //Alpha is obtainable from Delivery from the Past
     //Beta is obtainable from Setup
     //Gamma is obtainable from accepting Network Provider - Part 1
@@ -363,6 +363,7 @@
         //More options can be found in the advanced config folder in the secureChanges.json5 file
     },
 
+    //This mod is intended to (and balanced around) playing without the flea market. Change this setting at your own peril!
     "fleaMarketChanges": {
         "disableFleaMarket": true,
 
@@ -370,6 +371,10 @@
         "fleaWhitelist": [
 
         ]
+    },
+
+    "customItems": {
+        enable: true,
     },
 
     //Stash changes

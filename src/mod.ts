@@ -11,6 +11,7 @@ import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import { getModFolder } from "./utils";
 import { changeStashProgression } from "./miscChanges/stashChanges";
 import { disableFleaMarket } from "./miscChanges/fleaChanges";
+import { addNewItems } from "./customItems/items";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -32,6 +33,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
     {
         this.context.database = container.resolve<DatabaseServer>("DatabaseServer");
         this.context.tables = this.context.database.getTables();
+
+        if (this.context.config.customItems.enable) addNewItems(this.context);
 
         if (this.context.config.algorithmicalRebalancing.enable) algorithmicallyRebalance(container, this.context);
 

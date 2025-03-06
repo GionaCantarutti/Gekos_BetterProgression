@@ -11,6 +11,16 @@ const currencies: string[] = [
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
 
+export function addToLocale(locales, id:string, name:string, shortname:string, description:string): void
+{
+    for (const locale of Object.values(locales))
+    {
+        locale[`${id} Name`] = name;
+        locale[`${id} ShortName`] = shortname;
+        locale[`${id} Description`] = description;
+    }
+}
+
 export function shareSameNiche(a: IItem, b: IItem, aTrader: ITrader, bTrader: ITrader, context: Context) : boolean
 {
     const c = context.config.algorithmicalRebalancing.weaponRules.upshiftRules;
