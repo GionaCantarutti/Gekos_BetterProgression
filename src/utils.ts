@@ -11,7 +11,7 @@ const currencies: string[] = [
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
 
-export function addToLocale(locales, id:string, name:string, shortname:string, description:string): void
+export function addToLocale(locales: Record<string, Record<string, string>>, id:string, name:string, shortname:string, description:string): void
 {
     for (const locale of Object.values(locales))
     {
@@ -82,7 +82,8 @@ export function isBarterTrade(trade: IItem, trader: ITrader): boolean
 }
 
 //Checks if the given trade item is quest locked on the given trader
-export function isQuestLocked(trade: IItem, trader: ITrader): boolean {
+export function isQuestLocked(trade: IItem, trader: ITrader): boolean
+{
 
     const questLocks = [
         ...Object.keys(trader.questassort["success"]),
@@ -99,7 +100,8 @@ export function isQuestLocked(trade: IItem, trader: ITrader): boolean {
 }
 
 //Returns the path to the mod folder
-export function getModFolder(): string {
+export function getModFolder(): string
+{
     return "./user/mods/Gekos_BetterProgression";
 }
 

@@ -80,7 +80,7 @@ export function changeStashProgression(context: Context): void
     //Change construction price
     const hideoutStashStages = context.tables.hideout.areas.find((area) => area.type === HideoutAreas.STASH).stages;
 
-    for (const [_, stage] of Object.entries(hideoutStashStages))
+    for (const stage of Object.values(hideoutStashStages))
     {
         const currencyRequirements = stage.requirements.filter((req) => req.templateId === Money.ROUBLES || req.templateId === Money.EUROS)
         for (const currencyRequirement of currencyRequirements)

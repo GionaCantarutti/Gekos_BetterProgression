@@ -3,10 +3,8 @@ import { DependencyContainer } from "tsyringe";
 import { Context } from "../contex";
 import { calculateAmmoLoyalty } from "./ammo";
 import { calculateWeaponLoyalty, weaponShifting as shiftWeapons } from "./weapon";
-import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty, shareSameNiche } from "../utils";
+import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
-import { ITrader } from "@spt/models/eft/common/tables/ITrader";
-import { IItem } from "@spt/models/eft/common/tables/IItem";
 import { ChangedItem } from "./types";
 
 export function algorithmicallyRebalance(container: DependencyContainer, context: Context): void

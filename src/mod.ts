@@ -1,4 +1,5 @@
 import fs from "fs";
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import JSON5 from "json5";
 import { DependencyContainer } from "tsyringe";
 import { IPostDBLoadMod } from "@spt/models/external/IPostDBLoadMod";
