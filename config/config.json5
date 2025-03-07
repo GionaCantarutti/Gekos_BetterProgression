@@ -373,6 +373,17 @@
         ]
     },
 
+    //Reduce the amounts of items required by each hideout upgrade. All items required beyond a certain threshold will be multiplied by the given factor. Only the amount that goes past the threshold is mutliplied
+    //For example if the threshold is 3 and the factor is 0.5 if a build would require 15 (= 3 + 12) nuts it will instead require 3 + (12 * 0.5) = 9 nuts
+    "hideoutBuildsChanges": {
+        "enable": true,
+
+        "threshold": 3,
+        "factor": 0.5,
+        "roundDown": true,
+    },
+
+    //Enable the addition of custom items and trades
     "customItems": {
         enable: true,
     },

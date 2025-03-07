@@ -3,7 +3,7 @@ import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
 import { Context } from "./contex";
 
-const currencies: string[] = [
+export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
     "5696686a4bdc2da3298b456a", //Dollars
     "569668774bdc2da2298b4568", //Euroes

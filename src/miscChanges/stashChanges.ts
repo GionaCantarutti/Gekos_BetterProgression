@@ -3,6 +3,7 @@ import { Context } from "../contex";
 import { IProfileSides } from "@spt/models/eft/common/tables/IProfileTemplate";
 import { ItemTpl } from "@spt/models/enums/ItemTpl";
 import { Money } from "@spt/models/enums/Money";
+import { currencies } from "../utils";
 
 export function changeStashProgression(context: Context): void
 {
@@ -82,7 +83,7 @@ export function changeStashProgression(context: Context): void
 
     for (const stage of Object.values(hideoutStashStages))
     {
-        const currencyRequirements = stage.requirements.filter((req) => req.templateId === Money.ROUBLES || req.templateId === Money.EUROS)
+        const currencyRequirements = stage.requirements.filter((req) => currencies.includes(req.templateId))
         for (const currencyRequirement of currencyRequirements)
         {
             if (currencyRequirement.count)
