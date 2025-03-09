@@ -14,6 +14,7 @@ import { changeStashProgression } from "./miscChanges/stashChanges";
 import { disableFleaMarket } from "./miscChanges/fleaChanges";
 import { addNewItems } from "./customItems/items";
 import { changeHidehoutBuildCosts } from "./miscChanges/buildChanges";
+import { changeSkills } from "./miscChanges/skills";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -53,6 +54,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         if (this.context.config.fleaMarketChanges.disableFleaMarket) disableFleaMarket(this.context);
 
         if (this.context.config.hideoutBuildsChanges.enable) changeHidehoutBuildCosts(this.context);
+
+        if (this.context.config.skillChanges.enable) changeSkills(this.context);
     }
 }
 

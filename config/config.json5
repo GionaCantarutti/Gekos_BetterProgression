@@ -163,7 +163,7 @@
             "enable": true,
             "logChanges": false, //For debugging
 
-            //Change every ammunition loyalty level by this much
+            //Change every weapon loyalty level by this much
             "globalDelta": 0,
 
             //Base loyalty score of each weapon is decided by its caliber. If the caliber of the weapon is not listed below then the default value will be picked
@@ -403,6 +403,20 @@
 
         //Change loyalty requirements for stash upgrades by this much
         "stashUpgradeLoyaltyDelta": -1,
+    },
+
+    //Make skill xp gain faster and buff some skill bonuses
+    "skillChanges": {
+        "enable": true,
+
+        //Multiply earned skill XP by this much if it's fresh XP
+        "SkillFreshEffectiveness": 2,
+        //How many full skill points are considered to be fresh
+        "SkillFreshPoints": 2,
+        //Minimum multiplier from having skill fatigue
+        "SkillMinEffectiveness": 0.4,
+        //How many points after fresh points before fatigue kicks in
+        "SkillPointsBeforeFatigue": 1,
     },
 
     //Miscellaneous changes
