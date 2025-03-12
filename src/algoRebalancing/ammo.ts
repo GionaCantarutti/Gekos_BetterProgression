@@ -1,14 +1,20 @@
 import { IItem } from "@spt/models/eft/common/tables/IItem";
 import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { Context } from "../contex";
+import { BaseClasses } from "@spt/models/enums/BaseClasses";
+import { isQuestLockedCraft, setAreaLevelRequirement } from "../utils";
 
 export function calculateAmmoLoyalty(item: IItem, context: Context): number
 {
+    const itemTemplate: ITemplateItem = context.tables.templates.items[item._tpl];
+
+    return scoreAmmo(itemTemplate, context);
+}
+
+function scoreAmmo(itemTemplate: ITemplateItem, context: Context): number
+{
 
     const config = context.config.algorithmicalRebalancing.ammoRules;
-    const tables = context.tables;
-
-    const itemTemplate: ITemplateItem = tables.templates.items[item._tpl];
 
     let loyalty: number = config.defaultBaseLoyaltyByPen;
 
@@ -42,6 +48,27 @@ export function calculateAmmoLoyalty(item: IItem, context: Context): number
 
     loyalty += config.globalDelta;
 
-    return loyalty;
+    return loyalty
+}
+
+export function rebalanceAmmoCrafts(context: Context): void
+{
+    const config = context.config.algorithmicalRebalancing.ammoRules;
+    const crafts = context.tables.hideout.production.recipes;
+
+    for (const craft of crafts)
+    {
+        const ammoId: string = craft.endProduct;
+        if (!context.itemHelper.isOfBaseclass(ammoId, BaseClasses.AMMO)) continue; //Exclude non-ammo
+
+        let score: number = scoreAmmo(context.tables.templates.items[ammoId], context);
+
+        if (isQuestLockedCraft(craft)) score += context.config.algorithmicalRebalancing.questLockDelta;
+
+        for (const map of config.craftSettings.loyaltyToLevelRanges)
+        {
+            if (score >= map.range[0] && score < map.range[1]) setAreaLevelRequirement(craft, map.level);
+        }
+    }
 
 }

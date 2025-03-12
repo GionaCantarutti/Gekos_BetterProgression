@@ -1,6 +1,6 @@
 import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { Context } from "../contex";
-import { calculateAmmoLoyalty } from "./ammo";
+import { calculateAmmoLoyalty, rebalanceAmmoCrafts } from "./ammo";
 import { calculateWeaponLoyalty, weaponShifting as shiftWeapons } from "./weapon";
 import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
@@ -138,5 +138,6 @@ export function algorithmicallyRebalance(context: Context): void
         }
     }
 
+    if (config.ammoRules.craftSettings.enable) rebalanceAmmoCrafts(context);
     
 }

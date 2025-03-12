@@ -35,6 +35,28 @@
             "enable": true,
             "logChanges": false, //For debugging
 
+            //Settings specific to hideout crafts of ammo
+            "craftSettings": {
+                //If disabled ammo crafts will not be changed by this mod
+                "enable": true,
+
+                //If loyalty score falls between the given ranges then the ammunition craft will end up in the corresponding workbench level
+                "loyaltyToLevelRanges": [
+                    {
+                        "range": [-9999, 2.5],
+                        "level": 1
+                    },
+                    {
+                        "range": [2.5, 3.5],
+                        "level": 2
+                    },
+                    {
+                        "range": [3.5, 9999],
+                        "level": 3
+                    }
+                ]
+            },
+
             //Change every ammunition loyalty level by this much
             "globalDelta": 0,
             
@@ -429,6 +451,10 @@
             //Others
             //"6656560053eaaa7a23349c86": 5, //Lega Medals
         },
+
+        //Multiply amounts of crafted products and crafting times in hideout
+        "craftProductMultiplier": 2,
+        "craftTimeMultiplier": 0.5,
 
     }
 }

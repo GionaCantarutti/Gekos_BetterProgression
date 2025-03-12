@@ -24,7 +24,8 @@ export class Context
         this.itemHelper = _helper;
     }
 
-    public logObject(object: any): void {
+    public logObject(object: any): void
+    {
         this.logger?.info(JSON.stringify(object, null, 2));
     }
 

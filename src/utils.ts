@@ -2,6 +2,7 @@ import { IItem } from "@spt/models/eft/common/tables/IItem";
 import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
 import { Context } from "./contex";
+import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
@@ -10,6 +11,24 @@ export const currencies: string[] = [
     "5d235b4d86f7742e017bc88a", //GP Coin
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
+
+export function setAreaLevelRequirement(craft: IHideoutProduction, level: number): void
+{
+    for (const req of craft.requirements)
+    {
+        if (req.requiredLevel != null) req.requiredLevel = level;
+    }
+}
+
+export function isQuestLockedCraft(craft: IHideoutProduction): boolean
+{
+    for (const req of craft.requirements)
+    {
+        if (req.questId != null) return true;
+    }
+
+    return false;
+}
 
 export function addToLocale(locales: Record<string, Record<string, string>>, id:string, name:string, shortname:string, description:string): void
 {

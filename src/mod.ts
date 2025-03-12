@@ -12,15 +12,14 @@ import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
 import { getModFolder } from "./utils";
 import { changeStashProgression } from "./miscChanges/stashChanges";
 import { disableFleaMarket } from "./miscChanges/fleaChanges";
-import { addNewItems } from "./customItems/items";
+//import { addNewItems } from "./customItems/items";
 import { changeHidehoutBuildCosts } from "./miscChanges/buildChanges";
 import { changeSkills } from "./miscChanges/skills";
 import { ItemHelper } from "@spt/helpers/ItemHelper";
+import { changeCrafts } from "./miscChanges/craftChanges";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
-    // config and context
-    //private config = require("../config/config.json");
     private context: Context;
     
     preSptLoad(container: DependencyContainer): void
@@ -58,6 +57,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         if (this.context.config.hideoutBuildsChanges.enable) changeHidehoutBuildCosts(this.context);
 
         if (this.context.config.skillChanges.enable) changeSkills(this.context);
+
+        changeCrafts(this.context);
     }
 }
 
