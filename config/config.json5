@@ -456,5 +456,30 @@
         "craftProductMultiplier": 2,
         "craftTimeMultiplier": 0.5,
 
+        //Gain standing/rep for Ref every time you get a PMC kill
+        "refStandingOnKill": {
+            "enable": true,
+
+            //Amount of standing/rep to be gained depending on the level of the player killed
+            "repByKillLevel": [
+                {
+                    "levelRange": [0, 10],
+                    "rep": 0.003
+                },
+                {
+                    "levelRange": [10, 30],
+                    "rep": 0.004
+                },
+                {
+                    "levelRange": [30, 50],
+                    "rep": 0.006
+                },
+                {
+                    "levelRange": [50, 9999],
+                    "rep": 0.01
+                }
+            ]
+        }
+
     }
 }

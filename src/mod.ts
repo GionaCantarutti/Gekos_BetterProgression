@@ -17,6 +17,10 @@ import { changeHidehoutBuildCosts } from "./miscChanges/buildChanges";
 import { changeSkills } from "./miscChanges/skills";
 import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { changeCrafts } from "./miscChanges/craftChanges";
+import { LocationLifecycleService } from "@spt/services/LocationLifecycleService";
+import { IPmcData } from "@spt/models/eft/common/IPmcData";
+import { IEndLocalRaidRequestData } from "@spt/models/eft/match/IEndLocalRaidRequestData";
+import { gainRefRepOnKill } from "./miscChanges/refRepRework";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -30,6 +34,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         //Read config
         const fileContent = fs.readFileSync(getModFolder() + "/config/config.json5", "utf-8");
         this.context.config = JSON5.parse(fileContent);
+
+        if (this.context.config.misc.refStandingOnKill.enable) gainRefRepOnKill(this.context, container);
     }
 
     public postDBLoad(container: DependencyContainer): void
