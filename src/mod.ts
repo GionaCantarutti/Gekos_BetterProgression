@@ -15,6 +15,7 @@ import { disableFleaMarket } from "./miscChanges/fleaChanges";
 import { addNewItems } from "./customItems/items";
 import { changeHidehoutBuildCosts } from "./miscChanges/buildChanges";
 import { changeSkills } from "./miscChanges/skills";
+import { ItemHelper } from "@spt/helpers/ItemHelper";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -36,10 +37,11 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
     {
         this.context.database = container.resolve<DatabaseServer>("DatabaseServer");
         this.context.tables = this.context.database.getTables();
+        this.context.itemHelper = container.resolve<ItemHelper>("ItemHelper");
 
         //if (this.context.config.customItems.enable) addNewItems(this.context); //Feature split into its own separate mod
 
-        if (this.context.config.algorithmicalRebalancing.enable) algorithmicallyRebalance(container, this.context);
+        if (this.context.config.algorithmicalRebalancing.enable) algorithmicallyRebalance(this.context);
 
         //Change stack sizes
         for (const [item, stackSize] of Object.entries(this.context.config.misc.stackSizeOverride as Record<string, number>))

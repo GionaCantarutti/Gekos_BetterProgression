@@ -1,5 +1,4 @@
 import { ItemHelper } from "@spt/helpers/ItemHelper";
-import { DependencyContainer } from "tsyringe";
 import { Context } from "../contex";
 import { calculateAmmoLoyalty } from "./ammo";
 import { calculateWeaponLoyalty, weaponShifting as shiftWeapons } from "./weapon";
@@ -7,12 +6,12 @@ import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty } from "../u
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
 import { ChangedItem } from "./types";
 
-export function algorithmicallyRebalance(container: DependencyContainer, context: Context): void
+export function algorithmicallyRebalance(context: Context): void
 {
     //Alias
     const config = context.config.algorithmicalRebalancing;
 
-    const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
+    const itemHelper: ItemHelper = context.itemHelper;
     const traders = Object.values(context.tables.traders);
 
     //Organize changed items by loyalty level so that they can be easily accessed by the shifting system

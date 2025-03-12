@@ -367,6 +367,9 @@
     "fleaMarketChanges": {
         "disableFleaMarket": true,
 
+        //If true keys that are tradable on the flea market by default will still be sellable even if disableFleaMarket is true
+        "stillAllowKeys": true,
+
         //Even if the flea market is disabled the following items will still be sold (and sellable) on it
         "fleaWhitelist": [
 
