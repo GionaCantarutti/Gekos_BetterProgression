@@ -37,7 +37,7 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         this.context.database = container.resolve<DatabaseServer>("DatabaseServer");
         this.context.tables = this.context.database.getTables();
 
-        if (this.context.config.customItems.enable) addNewItems(this.context);
+        //if (this.context.config.customItems.enable) addNewItems(this.context); //Feature split into its own separate mod
 
         if (this.context.config.algorithmicalRebalancing.enable) algorithmicallyRebalance(container, this.context);
 

@@ -383,11 +383,6 @@
         "roundDown": true,
     },
 
-    //Enable the addition of custom items and trades
-    "customItems": {
-        enable: true,
-    },
-
     //Stash changes
     "stashProgression" : {
         "enable": true,
@@ -409,7 +404,7 @@
     "skillChanges": {
         "enable": true,
 
-        //Multiply earned skill XP by this much if it's fresh XP
+        //Multiply earned skill XP by this much if it's fresh XP (XP for a skill you haven't level recently this raid)
         "SkillFreshEffectiveness": 2,
         //How many full skill points are considered to be fresh
         "SkillFreshPoints": 2,
