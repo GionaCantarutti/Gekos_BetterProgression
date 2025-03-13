@@ -479,7 +479,17 @@
                     "rep": 0.01
                 }
             ]
-        }
+        },
+
+        "SICCBuffs": {
+            "enable": true,
+
+            "canHoldWhatDocsCan": true,
+            
+            "additionalWhitelistedItems": [
+                "59fafd4b86f7745ca07e1232", //Key tool
+            ]
+        },
 
     }
 }

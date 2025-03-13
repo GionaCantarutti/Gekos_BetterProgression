@@ -21,6 +21,7 @@ import { LocationLifecycleService } from "@spt/services/LocationLifecycleService
 import { IPmcData } from "@spt/models/eft/common/IPmcData";
 import { IEndLocalRaidRequestData } from "@spt/models/eft/match/IEndLocalRaidRequestData";
 import { gainRefRepOnKill } from "./miscChanges/refRepRework";
+import { buffSICCCase } from "./miscChanges/buffSICCCase";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -65,6 +66,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         if (this.context.config.skillChanges.enable) changeSkills(this.context);
 
         changeCrafts(this.context);
+
+        if (this.context.config.misc.SICCBuffs.enable) buffSICCCase(this.context);
     }
 }
 
