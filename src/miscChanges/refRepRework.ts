@@ -32,7 +32,7 @@ function repByKills(pmcKills: IVictim[], context: Context): number
 {
     let totalRep: number = 0;
 
-    for (const kill of pmcKills) for (const repRange of context.config.misc.refStandingOnKill.repByKillLevel)
+    for (const kill of pmcKills) for (const repRange of context.config.refStandingOnKill.repByKillLevel)
     {
         if (kill.Level >= repRange.levelRange[0] && kill.Level < repRange.levelRange[1]) totalRep += repRange.rep;
     }

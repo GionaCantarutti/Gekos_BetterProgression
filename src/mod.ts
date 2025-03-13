@@ -36,7 +36,7 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         const fileContent = fs.readFileSync(getModFolder() + "/config/config.json5", "utf-8");
         this.context.config = JSON5.parse(fileContent);
 
-        if (this.context.config.misc.refStandingOnKill.enable) gainRefRepOnKill(this.context, container);
+        if (this.context.config.refStandingOnKill.enable) gainRefRepOnKill(this.context, container);
     }
 
     public postDBLoad(container: DependencyContainer): void
@@ -67,7 +67,7 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
 
         changeCrafts(this.context);
 
-        if (this.context.config.misc.SICCBuffs.enable) buffSICCCase(this.context);
+        if (this.context.config.SICCBuffs.enable) buffSICCCase(this.context);
     }
 }
 

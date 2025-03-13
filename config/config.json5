@@ -3,6 +3,7 @@
 // Welcome to the config file. Nearly everything this mod does can be disabled or tweaked to your liking.
 // You can find IDs for items and other things on https://moxopixel.com/tarkynator/. Failing that you can explore the SPT_Data/Server/database folder in your SPT installation to find the ID you need
 // A few times "Deltas" are mentioned in this config file. Delta is a fancy word to mean "change", a negative delta will reduce a value and a positive one will increase it
+// All ranges are considered to be inclusive of the lower bound but exclusive of the upper one. For example a [10, 40] range will be all values from 10 to 40 with 10 included but 40 excluded
 // If you encounter any bugs please do let me know either on the GitHub page or as a comment on the SPT Hub page for the mod
 //
 
@@ -380,8 +381,10 @@
     //Gamma is obtainable from accepting Network Provider - Part 1
     "secureContainerProgression": {
         "enable": true,
+
         //Set the container you start a new profile with. Doesn't work if mod gets added after the profile has already been created, please start fresh
         "starterContainer": "5732ee6a24597719ae0c0281", //Waist Pouch
+
         //More options can be found in the advanced config folder in the secureChanges.json5 file
     },
 
@@ -389,7 +392,7 @@
     "fleaMarketChanges": {
         "disableFleaMarket": true,
 
-        //If true keys that are tradable on the flea market by default will still be sellable even if disableFleaMarket is true
+        //If true keys that are tradable on the flea market by default will still be tradable even if disableFleaMarket is true
         "stillAllowKeys": true,
 
         //Even if the flea market is disabled the following items will still be sold (and sellable) on it
@@ -412,7 +415,7 @@
     "stashProgression" : {
         "enable": true,
 
-        //What stash level should a profile start with?
+        //What stash level should a new profile start with?
         "startingStashLevel": 1,
 
         //Amount of lines in each stash level
@@ -439,8 +442,50 @@
         "SkillPointsBeforeFatigue": 1,
     },
 
+    //Gain standing/rep for Ref every time you get a PMC kill
+    "refStandingOnKill": {
+        "enable": true,
+
+        //Amount of standing/rep to be gained depending on the level of the player killed
+        "repByKillLevel": [
+            {
+                "levelRange": [0, 10],
+                "rep": 0.003
+            },
+            {
+                "levelRange": [10, 30],
+                "rep": 0.004
+            },
+            {
+                "levelRange": [30, 50],
+                "rep": 0.006
+            },
+            {
+                "levelRange": [50, 9999],
+                "rep": 0.01
+            }
+        ]
+    },
+
+    //A series of buffs to the SICC container
+    "SICCBuffs": {
+        "enable": true,
+        
+        //SICC will be able to hold everything that the Docs case can (on top of what the SICC already can carry)
+        "canHoldWhatDocsCan": true,
+        
+        //Additional items that can be put in a SICC case
+        "additionalWhitelistedItems": [
+            "59fafd4b86f7745ca07e1232", //Key tool
+        ]
+    },
+
     //Miscellaneous changes
     "misc": {
+
+        //Multiply amounts of crafted products and crafting times in hideout
+        "craftProductMultiplier": 2,
+        "craftTimeMultiplier": 0.5,
 
         //Change maximum stack size for the given items
         "stackSizeOverride": {
@@ -450,48 +495,6 @@
             "5b4391a586f7745321235ab2": 3, //Wi-fi Camera
             //Others
             //"6656560053eaaa7a23349c86": 5, //Lega Medals
-        },
-
-        //Multiply amounts of crafted products and crafting times in hideout
-        "craftProductMultiplier": 2,
-        "craftTimeMultiplier": 0.5,
-
-        //Gain standing/rep for Ref every time you get a PMC kill
-        "refStandingOnKill": {
-            "enable": true,
-
-            //Amount of standing/rep to be gained depending on the level of the player killed
-            "repByKillLevel": [
-                {
-                    "levelRange": [0, 10],
-                    "rep": 0.003
-                },
-                {
-                    "levelRange": [10, 30],
-                    "rep": 0.004
-                },
-                {
-                    "levelRange": [30, 50],
-                    "rep": 0.006
-                },
-                {
-                    "levelRange": [50, 9999],
-                    "rep": 0.01
-                }
-            ]
-        },
-
-        //A series of buffs to the SICC container
-        "SICCBuffs": {
-            "enable": true,
-            
-            //SICC will be able to hold everything that the Docs case can (on top of what the SICC already can carry)
-            "canHoldWhatDocsCan": true,
-            
-            //Additional items that can be put in a SICC case
-            "additionalWhitelistedItems": [
-                "59fafd4b86f7745ca07e1232", //Key tool
-            ]
         },
 
         //Change sizes of containers
@@ -507,7 +510,7 @@
             //Tactical Gear Component items (does nothing if mod is not installed)
             "672e2e7526ba61dbb88be7ff": [4, 2], //TGC First Aid container nerf down to 4x2
             "672e2e758808bacbb9d5abc4": [2, 3], //TGC Ammo Pouch nerf down to 2x3
-        }
-
+        },
+        
     }
 }
