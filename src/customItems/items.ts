@@ -9,7 +9,7 @@ import { IBarterScheme } from "@spt/models/eft/common/tables/ITrader";
 
 export function addNewItems(context: Context): void
 {
-    //Read secure container config
+    //Read custom items config
     const fileContent = fs.readFileSync(getModFolder() + "/config/advanced/customItems.json5", "utf-8");
     const itemsConfig = JSON5.parse(fileContent);
 

@@ -3,6 +3,9 @@ import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
 import { Context } from "./contex";
 import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
+import { QuestRewardType } from "@spt/models/enums/QuestRewardType";
+import { ObjectId } from "@spt/utils/ObjectId";
+import { TimeUtil } from "@spt/utils/TimeUtil";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
@@ -11,6 +14,32 @@ export const currencies: string[] = [
     "5d235b4d86f7742e017bc88a", //GP Coin
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
+
+export function lockBehindQuest(context: Context, traderID: string, trade: string, lock: string, itemID: string, rewardID: string, targetID: string): void
+{
+    const trader = context.tables.traders[traderID];
+    trader.questassort.success[trade] = lock;
+
+    const questRewards = context.tables.templates.quests[lock].rewards.Success;
+    
+    questRewards.push(
+        {
+            type: QuestRewardType.ASSORTMENT_UNLOCK,
+            index: questRewards.length,
+            unknown: false,
+            traderId: traderID,
+            target: targetID,
+            items: [
+                {
+                    _id: targetID,
+                    _tpl: itemID
+                }
+            ],
+            id: rewardID,
+            availableInGameEditions: []
+        }
+    )
+}
 
 export function setAreaLevelRequirement(craft: IHideoutProduction, level: number): void
 {

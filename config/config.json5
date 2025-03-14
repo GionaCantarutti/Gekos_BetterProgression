@@ -491,6 +491,9 @@
         "craftProductMultiplier": 2,
         "craftTimeMultiplier": 0.5,
 
+        //Enable or disable the custom trades defined in the advanced config customTrades.json5
+        "addCustomTrades": true,
+
         //Change maximum stack size for the given items
         "stackSizeOverride": {
             //Special items used in quests
