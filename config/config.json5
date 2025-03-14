@@ -483,6 +483,10 @@
     //Miscellaneous changes
     "misc": {
 
+        "removeFirFromQuests": true,
+        "removeFirFromHideout": true, //ToDo: implement in 3.11
+        "removeFirFromFlea": true,
+
         //Multiply amounts of crafted products and crafting times in hideout
         "craftProductMultiplier": 2,
         "craftTimeMultiplier": 0.5,
