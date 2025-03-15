@@ -25,6 +25,7 @@ import { buffSICCCase } from "./miscChanges/buffSICCCase";
 import { removeFirFromFlea, removeFirFromHideout, removeFirFromQuests } from "./miscChanges/firChanges";
 import { addCustomTrades } from "./miscChanges/customTrades";
 import { changeBitcoinFarming } from "./miscChanges/bitcoinChanges";
+import { changePrices } from "./miscChanges/priceChanging";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -69,6 +70,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         if (this.context.config.skillChanges.enable) changeSkills(this.context);
 
         changeCrafts(this.context);
+
+        changePrices(this.context);
 
         if (this.context.config.SICCBuffs.enable) buffSICCCase(this.context);
 

@@ -539,6 +539,19 @@
             "672e2e7526ba61dbb88be7ff": [4, 2], //TGC First Aid container nerf down to 4x2
             "672e2e758808bacbb9d5abc4": [2, 3], //TGC Ammo Pouch nerf down to 2x3
         },
+
+        //Change the price of items that are sold for rubles
+        "priceChanges": {
+            //WTT-Pack 'n' Strap items (does nothing if mod is not installed)
+            "12403f74773f49be6a2d84b7": 1442000,    //Small Medical Pouch
+            "ae9e418fd5d4c4eec4a0e6ea": 620920,     //Small Ammunition Pouch
+
+            //Tactical Gear Component items (does nothing if mod is not installed)
+            "672e2e7526ba61dbb88be7ff": 6080000,    //TGC First Aid container
+            "672e2e758808bacbb9d5abc4": 3880000,    //TGC Ammo Pouch
+
+            "5448be9a4bdc2dfd2f8b456a": 100000,
+        }
         
     }
 }
