@@ -24,6 +24,7 @@ import { gainRefRepOnKill } from "./miscChanges/refRepRework";
 import { buffSICCCase } from "./miscChanges/buffSICCCase";
 import { removeFirFromFlea, removeFirFromHideout, removeFirFromQuests } from "./miscChanges/firChanges";
 import { addCustomTrades } from "./miscChanges/customTrades";
+import { changeBitcoinFarming } from "./miscChanges/bitcoinChanges";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -76,6 +77,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         if (this.context.config.misc.removeFirFromFlea) removeFirFromFlea(this.context);
 
         if (this.context.config.misc.addCustomTrades) addCustomTrades(this.context);
+
+        if (this.context.config.bitcoinChanges.enable) changeBitcoinFarming(this.context);
     }
 }
 

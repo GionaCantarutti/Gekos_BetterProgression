@@ -480,6 +480,27 @@
         ]
     },
 
+    //A variety of changes to bitcoin farming. The defualt configuration is aimed at making bitcoin farming less powerful to start with but more powerful at high gpu counts
+    "bitcoinChanges": {
+        "enable": true,
+
+        //Remove all non-barter trades for GPUs
+        "cannotBuyGPU": true,
+
+        //Should the value of a BitCoin be overridden to be a set value?
+        "overrideValue": true,
+        "value": 648000,
+
+        //Desmos graph to visualize the following two values: https://www.desmos.com/calculator/osralvxw4g
+        //Flatly multiply the rate of btc produced by this much (variable m in Desmos)
+        "btcFarmSpeedMult": 0.68,
+        //How effective is each GPU in boosting the production rate (variable E in Desmos)
+        "gpuBoostRate": 0.164,
+
+        //How many bitcoins fit in the bitcoin farm
+        "btcCapacity": 5,
+    },
+
     //Miscellaneous changes
     "misc": {
 
