@@ -551,7 +551,16 @@
             "672e2e758808bacbb9d5abc4": 3880000,    //TGC Ammo Pouch
 
             "5448be9a4bdc2dfd2f8b456a": 100000,
-        }
+        },
         
+    },
+
+    //Development options
+    "dev": {
+        //Hide info logging of each change being applied when mod is loading
+        "muteProgressOnServerLoad": false,
+
+        //When an error occurs show the whole error message
+        "showFullError": true,
     }
 }
