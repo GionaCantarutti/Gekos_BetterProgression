@@ -73,7 +73,7 @@ export function penalizeAdvancedAttachments(changedItems: Record<number, Changed
             getDefaultAttachments(change.trade._tpl, context), indexById(changedItems),
             context))
         {
-            context.logger.info(`Penalizing ${context.tables.templates.items[change.trade._tpl]._name}`);
+            //context.logger.info(`Penalizing ${context.tables.templates.items[change.trade._tpl]._name}`);
             change.score += context.config.algorithmicalRebalancing.weaponRules.advancedAttachmentsDelta;
         }
     }

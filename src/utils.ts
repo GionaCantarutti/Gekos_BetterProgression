@@ -117,7 +117,7 @@ export function canAllAttachmentsBePurchased(item: IItem, assort: IItem[], exclu
         if (skip.includes(att._tpl)) continue;
         if (!canBePurchased(att._tpl, excludeBarters, excludeQuestlocks, tierCutoff, [item._id], tierOverrides, context))
         {
-            context.logger.info(`Unpurchasable attachment: ${context.tables.templates.items[att._tpl]._name}`)
+            //context.logger.info(`Unpurchasable attachment: ${context.tables.templates.items[att._tpl]._name}`)
             return false;
         }
     }
