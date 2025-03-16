@@ -37,6 +37,9 @@ export function calculateWeaponLoyalty(item: IItem, assort: IItem[], context: Co
 
 export function followDefaultBuild(changedItems: Record<number, ChangedItem[]>, context: Context): void
 {
+
+    const changesById = indexById(changedItems);
+
     for (const changes of Object.values(changedItems)) for (const change of Object.values(changes))
     {
         if (!change.isWeapon) continue;
@@ -50,6 +53,19 @@ export function followDefaultBuild(changedItems: Record<number, ChangedItem[]>, 
 
             for (const trade of partTrades)
             {
+                const oldChange = changesById[trade.trade._id];
+                if (oldChange != null)
+                {
+                    const oldLevel = loyaltyFromScore(oldChange.score, context.config.algorithmicalRebalancing.clampToMaxLevel);
+                    if (oldLevel <= level)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        changedItems[oldLevel].filter((item) => item.trade._id != trade.trade._id)
+                    }
+                }
                 changedItems[level].push({
                     trade: trade.trade,
                     score: change.score,
@@ -64,6 +80,9 @@ export function followDefaultBuild(changedItems: Record<number, ChangedItem[]>, 
 
 export function penalizeAdvancedAttachments(changedItems: Record<number, ChangedItem[]>, context: Context): void
 {
+    const config = context.config.algorithmicalRebalancing;
+    const toPenalize: [ChangedItem, number][] = [];
+
     for (const [tier, changes] of Object.entries(changedItems)) for (const change of changes)
     {
         if (!change.isWeapon) continue;
@@ -73,8 +92,23 @@ export function penalizeAdvancedAttachments(changedItems: Record<number, Changed
             getDefaultAttachments(change.trade._tpl, context), indexById(changedItems),
             context))
         {
+            toPenalize.push([change, Number(tier)]);
             //context.logger.info(`Penalizing ${context.tables.templates.items[change.trade._tpl]._name}`);
-            change.score += context.config.algorithmicalRebalancing.weaponRules.advancedAttachmentsDelta;
+        }
+    }
+
+    for (const [change, tier] of toPenalize)
+    {
+        changedItems[tier] = changedItems[tier].filter((item) => item.trade._id != change.trade._id);
+        change.score += config.weaponRules.advancedAttachmentsDelta;
+        const newLevel = loyaltyFromScore(change.score, config.clampToMaxLevel);
+        if (changedItems[newLevel] == null)
+        {
+            changedItems[newLevel] = [change];
+        }
+        else
+        {
+            changedItems[newLevel].push(change);
         }
     }
 }
