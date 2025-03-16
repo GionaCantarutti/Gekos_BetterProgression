@@ -3,7 +3,7 @@ import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
 import { Context } from "./contex";
 import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
-import { QuestRewardType } from "@spt/models/enums/QuestRewardType";
+import { RewardType } from "@spt/models/enums/RewardType";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
@@ -22,7 +22,7 @@ export function lockBehindQuest(context: Context, traderID: string, trade: strin
     
     questRewards.push(
         {
-            type: QuestRewardType.ASSORTMENT_UNLOCK,
+            type: RewardType.ASSORTMENT_UNLOCK,
             index: questRewards.length,
             unknown: false,
             traderId: traderID,

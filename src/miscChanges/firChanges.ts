@@ -1,3 +1,4 @@
+import { IStageRequirement } from "@spt/models/eft/hideout/IHideoutArea";
 import { Context } from "../contex";
 
 export function removeFirFromQuests(context: Context): void
@@ -43,5 +44,17 @@ export function removeFirFromFlea(context: Context): void
 
 export function removeFirFromHideout(context: Context): void
 {
-    context.logger.warning("FiR from hideout builds removal not yet implemented! Remember to put it in after 3.11 update!");
+
+    const hideoutAreas = context.tables.hideout.areas;
+
+    for (const area of hideoutAreas)
+    {
+        const itemReq = area.requirements.filter((req) => req.type == "Item");
+
+        for (const req of itemReq as IStageRequirement[])
+        {
+            req.isSpawnedInSession = false;
+        }
+    }
+
 }
