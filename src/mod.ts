@@ -9,7 +9,7 @@ import { Context } from "./contex";
 import { algorithmicallyRebalance } from "./algoRebalancing/core";
 import { applySecureContainerChanges } from "./miscChanges/secureContainer";
 import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
-import { getModFolder } from "./utils";
+import { getDefaultAttachments, getModFolder } from "./utils";
 import { changeStashProgression } from "./miscChanges/stashChanges";
 import { disableFleaMarket } from "./miscChanges/fleaChanges";
 import { changeHidehoutBuildCosts } from "./miscChanges/buildChanges";
@@ -24,6 +24,8 @@ import { changeBitcoinFarming } from "./miscChanges/bitcoinChanges";
 import { changePrices } from "./miscChanges/priceChanging";
 import { LoggerWrapper } from "./loggerWrapper";
 import { changeStackSizes } from "./miscChanges/stackSizeChanges";
+import { PresetHelper } from "@spt/helpers/PresetHelper";
+import { PresetController } from "@spt/controllers/PresetController";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -44,6 +46,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         this.context.database = container.resolve<DatabaseServer>("DatabaseServer");
         this.context.tables = this.context.database.getTables();
         this.context.itemHelper = container.resolve<ItemHelper>("ItemHelper");
+        container.resolve<PresetController>("PresetController").initialize();
+        this.context.presetHelper = container.resolve<PresetHelper>("PresetHelper");
 
         this.safelyApplyChanges();
 

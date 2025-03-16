@@ -1,7 +1,7 @@
 import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { Context } from "../contex";
 import { calculateAmmoLoyalty, rebalanceAmmoCrafts } from "./ammo";
-import { calculateWeaponLoyalty, weaponShifting as shiftWeapons } from "./weapon";
+import { calculateWeaponLoyalty, followDefaultBuild, penalizeAdvancedAttachments, weaponShifting as shiftWeapons } from "./weapon";
 import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
 import { ChangedItem } from "./types";
@@ -55,7 +55,7 @@ export function algorithmicallyRebalance(context: Context): void
                 && itemHelper.isOfBaseclass(item._tpl, BaseClasses.WEAPON)
                 && !itemHelper.isOfBaseclass(item._tpl, BaseClasses.SPECIAL_WEAPON)) //ToDo: double check melee and grenades (and possibly other exceptions)
             {
-                const loyaltyScore = calculateWeaponLoyalty(item, context);
+                const loyaltyScore = calculateWeaponLoyalty(item, itemsForSale, context);
 
                 thisItem = new ChangedItem(
                     item,
@@ -102,6 +102,10 @@ export function algorithmicallyRebalance(context: Context): void
     }
 
     if (config.weaponRules.upshiftRules.enable) shiftWeapons(changedItems, context);
+    
+    if (config.weaponRules.attachmentsFollowDefaultBuild) followDefaultBuild(changedItems, context);
+    
+    if (config.weaponRules.advancedAttachmentsDelta != 0) penalizeAdvancedAttachments(changedItems, context);
 
     //Apply changes
     for (const changesInLevel of Object.values(changedItems))

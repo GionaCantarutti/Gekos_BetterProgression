@@ -4,6 +4,7 @@ import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
 import { Context } from "./contex";
 import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
 import { RewardType } from "@spt/models/enums/RewardType";
+import { ChangedItem } from "./algoRebalancing/types";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
@@ -12,6 +13,120 @@ export const currencies: string[] = [
     "5d235b4d86f7742e017bc88a", //GP Coin
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
+
+//Find and return the trader-trade pair that sell the given item
+export function findTrades(itemId: string, context: Context): {trader: ITrader, trade: IItem}[]
+{
+    const found: {trader: ITrader, trade: IItem}[] = [];
+
+    for (const trader of Object.values(context.tables.traders))
+    {
+        if (trader.assort == null) continue;
+
+        for (const trade of trader.assort.items)
+        {
+            if (trade._tpl == itemId) found.push({
+                trader: trader,
+                trade: trade
+            })
+        }
+    }
+
+    return found;
+}
+
+//Returns an array of item IDs correponding 
+export function getDefaultAttachments(weaponID: string, context: Context): string[]
+{
+    const preset = context.presetHelper.getDefaultPreset(weaponID);
+    if (preset == null || preset == undefined) return [];
+    return preset._items.map((item) => item._tpl);
+}
+
+//Returns the list of all attachments connected to the given item (recursively)
+export function unrollAttachments(item: IItem, assort: IItem[]): IItem[]
+{
+    const attachments: IItem[] = [];
+
+    const newAttachments = assort.filter( (candidate) => candidate.parentId == item._id && candidate._tpl != item._tpl );
+    attachments.push(...newAttachments);
+    for (const att of newAttachments)
+    {
+        attachments.push(...unrollAttachments(att, assort));
+    }
+
+    return attachments;
+}
+
+//Does the given item from the given assort contain the given attachment? (as an item table id)
+export function containsAttachment(item: IItem, assort: IItem[], attachmentID: string): boolean
+{
+    return unrollAttachments(item, assort).map( (item) => item._tpl ).includes(attachmentID);
+}
+
+export function indexById(byTier: Record<number, ChangedItem[]>): Record<string, ChangedItem>
+{
+    const byId: Record<string, ChangedItem> = {};
+
+    for (const items of Object.values(byTier)) for (const item of items)
+    {
+        byId[item.trade._id] = item;
+    }
+
+    return byId;
+}
+
+//Can the given item be purchased before or at the given loyalty tier cutoff? Can optionally exclude barters
+//Trade IDs in skip will not be considered as valid purchases (mostly to avoid self-referencing when used in canAllAttachmentsBePurchased)
+//If an item is present in tierOverrides the corresponding loyalty level will be used instead of that of the trader
+export function canBePurchased(itemID: string, excludeBarters: boolean, excludeQuestlocks: boolean, tierCutoff: number, skip: string[], tierOverrides: Record<string, ChangedItem>, context: Context): boolean
+{
+    
+    for (const trader of Object.values(context.tables.traders))
+    {
+        if (trader.assort == null) continue;
+
+        for (const trade of trader.assort.items)
+        {
+            const loyalty = tierOverrides[trade._id] != null ? tierOverrides[trade._id].score : trader.assort.loyal_level_items[trade._id]
+            if (loyaltyFromScore(loyalty, context.config.algorithmicalRebalancing.clampToMaxLevel) > tierCutoff) continue;
+
+            if ((trade._tpl === itemID && trader.assort.barter_scheme[trade._id] != null) || containsAttachment(trade, trader.assort.items, itemID)) //It's a match!
+            {
+                if (excludeBarters && isBarterTrade(trade, trader)) continue;
+                if (excludeQuestlocks && isQuestLocked(trade, trader)) continue;
+                if (skip.includes(trade._id)) continue;
+                return true;
+            }
+        }
+    }
+
+    return false;
+
+}
+
+//Can all the attachments on the given item be purchased before the given loyalty tier cutoff? Can optionally exclude barters
+//Attachments in the skip list will not be checked
+export function canAllAttachmentsBePurchased(item: IItem, assort: IItem[], excludeBarters: boolean, excludeQuestlocks: boolean, tierCutoff: number, skip: string[], tierOverrides: Record<string, ChangedItem>, context: Context): boolean
+{
+    
+    const attachments = unrollAttachments(item, assort);
+
+    for (const att of attachments)
+    {
+        if (skip.includes(att._tpl)) continue;
+        if (!canBePurchased(att._tpl, excludeBarters, excludeQuestlocks, tierCutoff, [item._id], tierOverrides, context))
+        {
+            context.logger.info(`Unpurchasable attachment: ${context.tables.templates.items[att._tpl]._name}`)
+            return false;
+        }
+    }
+
+    //context.logger.success(`Did not penalize ${context.tables.templates.items[item._tpl]._name}`);
+
+    return true;
+
+}
 
 export function lockBehindQuest(context: Context, traderID: string, trade: string, lock: string, itemID: string, rewardID: string, targetID: string): void
 {

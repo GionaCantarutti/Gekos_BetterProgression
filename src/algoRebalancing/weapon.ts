@@ -1,11 +1,10 @@
 import { IItem } from "@spt/models/eft/common/tables/IItem";
 import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
-import { IDatabaseTables } from "@spt/models/spt/server/IDatabaseTables";
 import { Context } from "../contex";
-import { bestFiremode, loyaltyFromScore, pickBestFiremode, shareSameNiche } from "../utils";
+import { bestFiremode, canAllAttachmentsBePurchased, findTrades, getDefaultAttachments, indexById, loyaltyFromScore, shareSameNiche } from "../utils";
 import { ChangedItem } from "./types";
 
-export function calculateWeaponLoyalty(item: IItem, context: Context): number
+export function calculateWeaponLoyalty(item: IItem, assort: IItem[], context: Context): number
 {
     const config = context.config.algorithmicalRebalancing.weaponRules;
     const tables = context.tables;
@@ -34,6 +33,50 @@ export function calculateWeaponLoyalty(item: IItem, context: Context): number
     }
 
     return loyalty + config.globalDelta;
+}
+
+export function followDefaultBuild(changedItems: Record<number, ChangedItem[]>, context: Context): void
+{
+    for (const changes of Object.values(changedItems)) for (const change of Object.values(changes))
+    {
+        if (!change.isWeapon) continue;
+
+        const parts = getDefaultAttachments(change.trade._tpl, context);
+
+        for (const part of parts)
+        {
+            const level = loyaltyFromScore(change.score, context.config.algorithmicalRebalancing.clampToMaxLevel);
+            const partTrades = findTrades(part, context);
+
+            for (const trade of partTrades)
+            {
+                changedItems[level].push({
+                    trade: trade.trade,
+                    score: change.score,
+                    trader: trade.trader,
+                    logChange: false,
+                    isWeapon: false
+                })
+            }
+        }
+    }
+}
+
+export function penalizeAdvancedAttachments(changedItems: Record<number, ChangedItem[]>, context: Context): void
+{
+    for (const [tier, changes] of Object.entries(changedItems)) for (const change of changes)
+    {
+        if (!change.isWeapon) continue;
+
+        if (!canAllAttachmentsBePurchased(
+            change.trade, change.trader.assort.items, true, true, Number(tier),
+            getDefaultAttachments(change.trade._tpl, context), indexById(changedItems),
+            context))
+        {
+            context.logger.info(`Penalizing ${context.tables.templates.items[change.trade._tpl]._name}`);
+            change.score += context.config.algorithmicalRebalancing.weaponRules.advancedAttachmentsDelta;
+        }
+    }
 }
 
 export function weaponShifting(changedItems: { [level: number] : ChangedItem[] }, context: Context): void

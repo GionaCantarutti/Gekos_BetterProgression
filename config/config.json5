@@ -189,6 +189,15 @@
             //Change every weapon loyalty level by this much
             "globalDelta": 0,
 
+            //All weapons will bring all of their default parts to their same loyalty level. If multiple weapons share the same default parts the lowest level is picked
+            //For example if this is true the default m4 gas block will always be found on the same loyalty level as the m4
+            "attachmentsFollowDefaultBuild": true,
+            //Add this delta if the weapon contains any attachments that cannot be purchased at the trader level the weapon would otherwise be placed at
+            //Won't affect attachments that are part of the default build of the weapon
+            //If attachmentsFollowDefaultBuild is set to false i reccomend setting this to 0
+            //If this is different than 0 the mod will take a few seconds longer to load
+            "advancedAttachmentsDelta": 1,
+
             //Base loyalty score of each weapon is decided by its caliber. If the caliber of the weapon is not listed below then the default value will be picked
             //Loyalty score is then further modified by the other rules
             "defaultBaseLoyalty": 2,
@@ -393,9 +402,9 @@
             },
             //ID of the item being sold
             "items": {
-                "57dc2fa62459775949412633": -0.5, //AKS-74U
-                "583990e32459771419544dd2": -0.5, //AKS-74UN
-                "5839a40f24597726f856b511": -0.5, //AKS-74UB
+                "57dc2fa62459775949412633": -0.7, //AKS-74U
+                "583990e32459771419544dd2": -0.7, //AKS-74UN
+                "5839a40f24597726f856b511": -0.7, //AKS-74UB
                 "62e7c4fba689e8c9c50dfc38": -1, //AUG A1
                 "61f7c9e189e6fb1a5e3ea78d": -2, //MP-18
                 "606587252535c57a13424cfd": +1, //Mutant
