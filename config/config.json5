@@ -505,7 +505,7 @@
     "misc": {
 
         "removeFirFromQuests": true,
-        "removeFirFromHideout": true, //ToDo: implement in 3.11
+        "removeFirFromHideout": true,
         "removeFirFromFlea": true,
 
         //Multiply amounts of crafted products and crafting times in hideout

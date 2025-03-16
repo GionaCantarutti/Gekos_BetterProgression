@@ -39,7 +39,7 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         this.safeApplyEarlyModifications(container);
     }
 
-    public postDBLoad(container: DependencyContainer): void
+    postDBLoad(container: DependencyContainer): void
     {
         this.context.database = container.resolve<DatabaseServer>("DatabaseServer");
         this.context.tables = this.context.database.getTables();

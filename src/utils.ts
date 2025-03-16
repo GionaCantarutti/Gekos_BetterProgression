@@ -4,8 +4,6 @@ import { IBarterScheme, ITrader } from "@spt/models/eft/common/tables/ITrader";
 import { Context } from "./contex";
 import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
 import { QuestRewardType } from "@spt/models/enums/QuestRewardType";
-import { ObjectId } from "@spt/utils/ObjectId";
-import { TimeUtil } from "@spt/utils/TimeUtil";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
