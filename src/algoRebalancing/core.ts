@@ -39,22 +39,22 @@ export function algorithmicallyRebalance(context: Context): void
             if (config.ammoRules.enable)
             {
                 let ammoOrBox = false;
+                let ammo;
                 let loyaltyScore;
                 if (itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO)) 
                 {
                     loyaltyScore = calculateAmmoLoyalty(item, context);
+                    ammo = item._tpl;
                     ammoOrBox = true;
                 }
                 else if (itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO_BOX))
                 {
-                    const ammo = context.tables.templates.items[item._tpl]._props.StackSlots[0]._props.filters[0].Filter[0];
+                    ammo = context.tables.templates.items[item._tpl]._props.StackSlots[0]._props.filters[0].Filter[0];
                     loyaltyScore = scoreAmmo(context.tables.templates.items[ammo], context)
                     ammoOrBox = true
                 }
-                if (ammoOrBox)
+                if (ammoOrBox && !config.ammoRules.ignoreCalibers.includes(context.tables.templates.items[ammo]._props.Caliber))
                 {
-                    
-
                     thisItem = new ChangedItem(
                         item,
                         loyaltyScore,

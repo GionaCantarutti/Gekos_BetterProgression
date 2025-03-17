@@ -5,7 +5,6 @@ import { Context } from "./contex";
 import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
 import { RewardType } from "@spt/models/enums/RewardType";
 import { ChangedItem } from "./algoRebalancing/types";
-import { BaseClasses } from "@spt/models/enums/BaseClasses";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles

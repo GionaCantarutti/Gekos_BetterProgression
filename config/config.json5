@@ -32,7 +32,7 @@
 
         //Modify the loyalty score of all offers on the given trader. Only affects items that are already being algorithmically rebalanced (ammo, wepaons)
         "deltaByTrader": {
-            "6617beeaa9cfa777ca915b7c": -1, //Ref
+            "6617beeaa9cfa777ca915b7c": -0.7, //Ref
         },
         
         //Ammo rebalancing module
@@ -74,31 +74,35 @@
                     "baseLoyalty": 0.5
                 },
                 {
-                    "penInterval": [14, 18],
+                    "penInterval": [14, 17],
                     "baseLoyalty": 1
                 },
                 {
-                    "penInterval": [18, 20],
+                    "penInterval": [17, 21],
                     "baseLoyalty": 1.5
                 },
                 {
-                    "penInterval": [20, 29],
+                    "penInterval": [21, 27],
                     "baseLoyalty": 2
                 },
                 {
-                    "penInterval": [29, 32],
+                    "penInterval": [27, 31],
                     "baseLoyalty": 2.6
                 },
                 {
-                    "penInterval": [32, 40],
+                    "penInterval": [31, 37],
                     "baseLoyalty": 3
                 },
                 {
-                    "penInterval": [40, 48],
+                    "penInterval": [37, 41],
+                    "baseLoyalty": 3.7
+                },
+                {
+                    "penInterval": [41, 47],
                     "baseLoyalty": 4
                 },
                 {
-                    "penInterval": [48, 99999],
+                    "penInterval": [47, 99999],
                     "baseLoyalty": 5
                 }
             ],
@@ -115,7 +119,7 @@
                 },
                 {
                     "caliber": "Caliber762x39",
-                    "loyaltyDelta": -0.5
+                    "loyaltyDelta": 0
                 },
                 {
                     "caliber": "Caliber762x51",
@@ -127,7 +131,7 @@
                 },
                 {
                     "caliber": "Caliber366TKM",
-                    "loyaltyDelta": -1.5
+                    "loyaltyDelta": -0.6
                 },
                 {
                     "caliber": "Caliber9x19PARA",
@@ -152,6 +156,18 @@
                 {
                     "caliber": "Caliber86x70",
                     "loyaltyDelta": -2
+                },
+                {
+                    "caliber": "Caliber556x45NATO",
+                    "loyaltyDelta": 0.4
+                },
+                {
+                    "caliber": "Caliber545x39",
+                    "loyaltyDelta": 0.3
+                },
+                {
+                    "caliber": "Caliber127x33",
+                    "loyaltyDelta": -0.5
                 }
             ],
 
@@ -181,6 +197,11 @@
                     "damageInterval": [360, 9999],
                     "loyaltyDelta": 4
                 }
+            ],
+
+            //Disable the ammo balancing module on the following calibers
+            "ignoreCalibers": [
+                "Caliber26x75", //Flare gun
             ]
         
         },
@@ -264,7 +285,7 @@
                 },
                 {
                     "caliber": "Caliber86x70",
-                    "baseLoyalty": 5
+                    "baseLoyalty": 6
                 },
                 {
                     "caliber": "Caliber1143x23ACP",
@@ -276,7 +297,7 @@
                 },
                 {
                     "caliber": "Caliber68x51",
-                    "baseLoyalty": 4.5
+                    "baseLoyalty": 4.9
                 },
                 {
                     "caliber": "Caliber127x33",
@@ -285,7 +306,11 @@
                 {
                     "caliber": "Caliber12g",
                     "baseLoyalty": 3.7
-                }
+                },
+                {
+                    "caliber": "Caliber762x39",
+                    "baseLoyalty": 3
+                },
                 
             ],
 
