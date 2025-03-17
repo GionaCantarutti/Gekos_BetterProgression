@@ -1,5 +1,8 @@
 import { IStageRequirement } from "@spt/models/eft/hideout/IHideoutArea";
 import { Context } from "../contex";
+import { DependencyContainer } from "tsyringe";
+import { RepeatableQuestGenerator } from "@spt/generators/RepeatableQuestGenerator";
+import { IQuestCondition } from "@spt/models/eft/common/tables/IQuest";
 
 export function removeFirFromQuests(context: Context): void
 {
@@ -57,4 +60,22 @@ export function removeFirFromHideout(context: Context): void
         }
     }
 
+}
+
+export function removeFirFromRepeatables(context: Context, container: DependencyContainer): void
+{
+    container.afterResolution("RepeatableQuestGenerator", (_t, result: RepeatableQuestGenerator) =>
+    {
+        // We want to replace the original method logic with something different
+        const old = (result as any).generateCompletionAvailableForFinish.bind(result);
+        (result as any).generateCompletionAvailableForFinish = (itemTpl: string, value: number) =>
+        {
+            const condition: IQuestCondition = old(itemTpl, value); //Add old logic back in
+
+            condition.onlyFoundInRaid = false;
+           
+            return condition;
+        };
+        // The modifier Always makes sure this replacement method is ALWAYS replaced
+    }, {frequency: "Always"});
 }

@@ -18,7 +18,7 @@ import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { changeCrafts } from "./miscChanges/craftChanges";
 import { gainRefRepOnKill } from "./miscChanges/refRepRework";
 import { buffSICCCase } from "./miscChanges/buffSICCCase";
-import { removeFirFromFlea, removeFirFromHideout, removeFirFromQuests } from "./miscChanges/firChanges";
+import { removeFirFromFlea, removeFirFromHideout, removeFirFromQuests, removeFirFromRepeatables } from "./miscChanges/firChanges";
 import { addCustomTrades } from "./miscChanges/customTrades";
 import { changeBitcoinFarming } from "./miscChanges/bitcoinChanges";
 import { changePrices } from "./miscChanges/priceChanging";
@@ -65,6 +65,15 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         catch
         {
             this.context.logger.error("Failed to inject ref rep on PMC kill function!")
+        }
+
+        try
+        {
+            if (this.context.config.misc.removeFirFromQuests) removeFirFromRepeatables(this.context, container);
+        }
+        catch
+        {
+            this.context.logger.error("Failed to patch daily/weekly quest generator to remove FiR requirement!");
         }
     }
 
