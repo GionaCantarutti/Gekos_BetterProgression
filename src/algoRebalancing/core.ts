@@ -1,6 +1,6 @@
 import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { Context } from "../contex";
-import { calculateAmmoLoyalty, rebalanceAmmoCrafts } from "./ammo";
+import { calculateAmmoLoyalty, rebalanceAmmoCrafts, scoreAmmo } from "./ammo";
 import { calculateWeaponLoyalty, followDefaultBuild, penalizeAdvancedAttachments, weaponShifting as shiftWeapons } from "./weapon";
 import { isBarterTrade, isQuestLocked, loyaltyFromScore, setLoyalty } from "../utils";
 import { BaseClasses } from "@spt/models/enums/BaseClasses";
@@ -36,18 +36,33 @@ export function algorithmicallyRebalance(context: Context): void
             let thisItem: ChangedItem;
 
             //// AMMO ////
-            if (config.ammoRules.enable
-                && itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO))
+            if (config.ammoRules.enable)
             {
-                const loyaltyScore = calculateAmmoLoyalty(item, context);
+                let ammoOrBox = false;
+                let loyaltyScore;
+                if (itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO)) 
+                {
+                    loyaltyScore = calculateAmmoLoyalty(item, context);
+                    ammoOrBox = true;
+                }
+                else if (itemHelper.isOfBaseclass(item._tpl, BaseClasses.AMMO_BOX))
+                {
+                    const ammo = context.tables.templates.items[item._tpl]._props.StackSlots[0]._props.filters[0].Filter[0];
+                    loyaltyScore = scoreAmmo(context.tables.templates.items[ammo], context)
+                    ammoOrBox = true
+                }
+                if (ammoOrBox)
+                {
+                    
 
-                thisItem = new ChangedItem(
-                    item,
-                    loyaltyScore,
-                    trader,
-                    config.ammoRules.logChanges,
-                    false
-                );
+                    thisItem = new ChangedItem(
+                        item,
+                        loyaltyScore,
+                        trader,
+                        config.ammoRules.logChanges,
+                        false
+                    );
+                }
             }
 
             //// WEAPONS ////

@@ -11,7 +11,7 @@ export function calculateAmmoLoyalty(item: IItem, context: Context): number
     return scoreAmmo(itemTemplate, context);
 }
 
-function scoreAmmo(itemTemplate: ITemplateItem, context: Context): number
+export function scoreAmmo(itemTemplate: ITemplateItem, context: Context): number
 {
 
     const config = context.config.algorithmicalRebalancing.ammoRules;
