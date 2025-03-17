@@ -28,8 +28,12 @@
         //Traders that will not be affected by the rebalancing module
         "excludeTraders": [
             "579dc571d53a0658a154fbec", //Fence
-            "6617beeaa9cfa777ca915b7c", //Ref
         ],
+
+        //Modify the loyalty score of all offers on the given trader. Only affects items that are already being algorithmically rebalanced (ammo, wepaons)
+        "deltaByTrader": {
+            "6617beeaa9cfa777ca915b7c": -1, //Ref
+        },
         
         //Ammo rebalancing module
         "ammoRules": {

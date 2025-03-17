@@ -79,6 +79,10 @@ export function algorithmicallyRebalance(context: Context): void
                     thisItem.score += config.barterDelta;
                     if (config.logBartersAndLocks) context.logger.info(context.tables.templates.items[item._tpl]._name + " is a bartered item\t(Trade ID: " + item._id + ")");
                 }
+
+                //By-trader delta
+                if (trader.base._id in config.deltaByTrader) thisItem.score += config.deltaByTrader[trader.base._id]
+
                 //Explicit deltas
                 const tradeD = config.explicitLoyaltyDelta.trades[thisItem.trade._id];
                 const itemD = config.explicitLoyaltyDelta.items[thisItem.trade._tpl];
