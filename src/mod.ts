@@ -9,7 +9,7 @@ import { Context } from "./contex";
 import { algorithmicallyRebalance } from "./algoRebalancing/core";
 import { applySecureContainerChanges } from "./miscChanges/secureContainer";
 import { IPreSptLoadMod } from "@spt/models/external/IPreSptLoadMod";
-import { getDefaultAttachments, getModFolder } from "./utils";
+import { getModFolder } from "./utils";
 import { changeStashProgression } from "./miscChanges/stashChanges";
 import { disableFleaMarket } from "./miscChanges/fleaChanges";
 import { changeHidehoutBuildCosts } from "./miscChanges/buildChanges";
@@ -26,6 +26,7 @@ import { LoggerWrapper } from "./loggerWrapper";
 import { changeStackSizes } from "./miscChanges/stackSizeChanges";
 import { PresetHelper } from "@spt/helpers/PresetHelper";
 import { PresetController } from "@spt/controllers/PresetController";
+import { setStartingReputation } from "./miscChanges/startingRep";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -147,6 +148,10 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
 
         log?.info("Applying changes to bitcoin farming...");
         this.safelyRunIf(cfg.bitcoinChanges.enable, () => changeBitcoinFarming(this.context), "Failed to apply changes to bitcoin farming!");
+        log?.info("Done!");
+
+        log?.info("Setting initial trader standing...");
+        this.safelyRunIf(cfg.bitcoinChanges.enable, () => setStartingReputation(this.context), "Failed to set initial trader standing!");
         log?.info("Done!");
     }
 

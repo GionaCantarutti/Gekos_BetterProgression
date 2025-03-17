@@ -5,6 +5,7 @@ import { Context } from "./contex";
 import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
 import { RewardType } from "@spt/models/enums/RewardType";
 import { ChangedItem } from "./algoRebalancing/types";
+import { BaseClasses } from "@spt/models/enums/BaseClasses";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
@@ -13,6 +14,8 @@ export const currencies: string[] = [
     "5d235b4d86f7742e017bc88a", //GP Coin
     "6656560053eaaa7a23349c86"  //Lega medal
 ]
+
+const purchasability: Record<string, number> = {};
 
 //Find and return the trader-trade pair that sell the given item
 export function findTrades(itemId: string, context: Context): {trader: ITrader, trade: IItem}[]
@@ -59,8 +62,13 @@ export function unrollAttachments(item: IItem, assort: IItem[]): IItem[]
 }
 
 //Does the given item from the given assort contain the given attachment? (as an item table id)
-export function containsAttachment(item: IItem, assort: IItem[], attachmentID: string): boolean
+export function containsAttachment(item: IItem, assort: IItem[], attachmentID: string, context: Context): boolean
 {
+    //Shortcut items without slots
+    const template = context.tables.templates.items[item._tpl];
+    if (template._props.Slots == null) return false
+    if (template._props.Slots.length == 0) return false;
+    
     return unrollAttachments(item, assort).map( (item) => item._tpl ).includes(attachmentID);
 }
 
@@ -79,8 +87,10 @@ export function indexById(byTier: Record<number, ChangedItem[]>): Record<string,
 //Can the given item be purchased before or at the given loyalty tier cutoff? Can optionally exclude barters
 //Trade IDs in skip will not be considered as valid purchases (mostly to avoid self-referencing when used in canAllAttachmentsBePurchased)
 //If an item is present in tierOverrides the corresponding loyalty level will be used instead of that of the trader
+//Careful about the dynamic programming part with purchasability. If this function previously found an item to be purchasable it will say it is again without checking even if things changed
 export function canBePurchased(itemID: string, excludeBarters: boolean, excludeQuestlocks: boolean, tierCutoff: number, skip: string[], tierOverrides: Record<string, ChangedItem>, context: Context): boolean
 {
+    if (purchasability[itemID] <= tierCutoff) return true;
     
     for (const trader of Object.values(context.tables.traders))
     {
@@ -91,11 +101,23 @@ export function canBePurchased(itemID: string, excludeBarters: boolean, excludeQ
             const loyalty = tierOverrides[trade._id] != null ? tierOverrides[trade._id].score : trader.assort.loyal_level_items[trade._id]
             if (loyaltyFromScore(loyalty, context.config.algorithmicalRebalancing.clampToMaxLevel) > tierCutoff) continue;
 
-            if ((trade._tpl === itemID && trader.assort.barter_scheme[trade._id] != null) || containsAttachment(trade, trader.assort.items, itemID)) //It's a match!
+            if
+            (
+                (trade._tpl === itemID && trader.assort.barter_scheme[trade._id] != null)
+                || containsAttachment(trade, trader.assort.items, itemID, context)
+            ) //It's a match!
             {
                 if (excludeBarters && isBarterTrade(trade, trader)) continue;
                 if (excludeQuestlocks && isQuestLocked(trade, trader)) continue;
                 if (skip.includes(trade._id)) continue;
+                if (itemID in purchasability)
+                {
+                    purchasability[itemID] = Math.min(purchasability[itemID], loyalty);
+                }
+                else
+                {
+                    purchasability[itemID] = loyalty;
+                }
                 return true;
             }
         }

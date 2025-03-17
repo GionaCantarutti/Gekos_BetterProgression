@@ -1,9 +1,9 @@
-import { ITemplateItem } from "@spt/models/eft/common/tables/ITemplateItem";
 import { Context } from "../contex";
 import fs from "fs";
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import JSON5 from "json5";
 import { getModFolder } from "../utils";
-import { IQuestReward } from "@spt/models/eft/common/tables/IQuest";
+import { IReward } from "@spt/models/eft/common/tables/IReward";
 
 export function applySecureContainerChanges(context: Context): void
 {
@@ -25,8 +25,8 @@ export function applySecureContainerChanges(context: Context): void
     {
         for (const [quest, extraReward] of Object.entries(questsWithRewards))
         {
-            if (condition == "Success") context.tables.templates.quests[quest].rewards.Success.push(extraReward as IQuestReward);
-            if (condition == "Started") context.tables.templates.quests[quest].rewards.Started.push(extraReward as IQuestReward);
+            if (condition == "Success") context.tables.templates.quests[quest].rewards.Success.push(extraReward as IReward);
+            if (condition == "Started") context.tables.templates.quests[quest].rewards.Started.push(extraReward as IReward);
         }
     }
 

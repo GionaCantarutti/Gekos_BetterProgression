@@ -566,6 +566,19 @@
         "btcCapacity": 5,
     },
 
+    //Change initial trader reputation
+    "overrideInitialStanding": {
+        "enable": true,
+        
+        //Default starting reputation
+        "defaultOverride": 0.05,
+
+        //Change the default stating on a per-trader basis
+        "indivudalOverrides": {
+            "579dc571d53a0658a154fbec": 1, //Fence
+        }
+    },
+
     //Miscellaneous changes
     "misc": {
 
