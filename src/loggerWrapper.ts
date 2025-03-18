@@ -4,6 +4,7 @@ import { LogBackgroundColor } from "@spt/models/spt/logging/LogBackgroundColor";
 import { LogTextColor } from "@spt/models/spt/logging/LogTextColor";
 import { ILogger } from "@spt/models/spt/utils/ILogger"
 import { getModFolder } from "./utils";
+import { PreSptModLoader } from "@spt/loaders/PreSptModLoader";
 
 export class LoggerWrapper
 {
@@ -13,15 +14,30 @@ export class LoggerWrapper
     readonly modName: string;
     readonly modVersion: string;
     
-    constructor(_logger: ILogger)
+    constructor(_logger: ILogger, preLoader: PreSptModLoader)
     {
-        const packageJsonPath = getModFolder() + "/package.json";
-        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
-
         this.logger = _logger;
-        this.modName = packageJson.name;
-        this.modVersion = packageJson.version;
-        this.prefix = `[${this.modName}-${this.modVersion}] `;
+
+        try
+        {
+            let modDetails = preLoader.getImportedModDetails()["Gekos_BetterProgression"];
+            if (modDetails == null)
+            {
+                modDetails = preLoader.getImportedModDetails()["drunkgeko-gekos_betterprogression"];
+            }
+
+            this.modName = modDetails.name;
+            this.modVersion = modDetails.version;
+            this.prefix = `[${this.modName}-${this.modVersion}] `;
+        }
+        catch (error)
+        {
+            this.modName = "gekos_betterprogression";
+            this.modVersion = "??";
+            this.prefix = `[${this.modName}-${this.modVersion}] `;
+            this.warning("Could not retrieve mod info!");
+            this.warning("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+        }
     }
 
     public info(message: string): void

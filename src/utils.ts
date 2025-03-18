@@ -5,6 +5,7 @@ import { Context } from "./contex";
 import { IHideoutProduction } from "@spt/models/eft/hideout/IHideoutProduction";
 import { RewardType } from "@spt/models/enums/RewardType";
 import { ChangedItem } from "./algoRebalancing/types";
+import { join } from "path";
 
 export const currencies: string[] = [
     "5449016a4bdc2d6f028b456f", //Roubles
@@ -284,7 +285,7 @@ export function isQuestLocked(trade: IItem, trader: ITrader): boolean
 //Returns the path to the mod folder
 export function getModFolder(): string
 {
-    return "./user/mods/Gekos_BetterProgression";
+    return join(__dirname, "../"); // "./user/mods/Gekos_BetterProgression";
 }
 
 export function bestFiremode(item: ITemplateItem): string

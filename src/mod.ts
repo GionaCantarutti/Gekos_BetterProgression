@@ -27,6 +27,8 @@ import { changeStackSizes } from "./miscChanges/stackSizeChanges";
 import { PresetHelper } from "@spt/helpers/PresetHelper";
 import { PresetController } from "@spt/controllers/PresetController";
 import { setStartingReputation } from "./miscChanges/startingRep";
+import { PreSptModLoader } from "@spt/loaders/PreSptModLoader";
+import { join } from "path";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -35,7 +37,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
     preSptLoad(container: DependencyContainer): void
     {
         this.context = new Context();
-        this.context.logger = new LoggerWrapper(container.resolve<ILogger>("WinstonLogger"));
+        const preLoader = container.resolve<PreSptModLoader>("PreSptModLoader");
+        this.context.logger = new LoggerWrapper(container.resolve<ILogger>("WinstonLogger"), preLoader);
 
         this.safelyReadConfig();
 
@@ -63,18 +66,28 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         {
             if (this.context.config.refStandingOnKill.enable) gainRefRepOnKill(this.context, container);
         }
-        catch
+        catch (error)
         {
-            this.context.logger.error("Failed to inject ref rep on PMC kill function!")
+            this.context.logger.error("Failed to inject ref rep on PMC kill function!");
+            if (this.context.config.dev.showFullError)
+            {
+                this.context.logger.error("Error Details:" + error);
+                this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+            }
         }
 
         try
         {
             if (this.context.config.misc.removeFirFromQuests) removeFirFromRepeatables(this.context, container);
         }
-        catch
+        catch (error)
         {
             this.context.logger.error("Failed to patch daily/weekly quest generator to remove FiR requirement!");
+            if (this.context.config.dev.showFullError)
+            {
+                this.context.logger.error("Error Details:" + error);
+                this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+            }
         }
     }
 
@@ -82,12 +95,14 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
     {
         try
         {
-            const fileContent = fs.readFileSync(getModFolder() + "/config/config.json5", "utf-8");
+            const fileContent = fs.readFileSync(join(getModFolder(),"/config/config.json5"), "utf-8");
             this.context.config = JSON5.parse(fileContent);
         }
-        catch
+        catch (error)
         {
             this.context.logger.error("Main config file failed to load!")
+            this.context.logger.error("Error Details:" + error);
+            this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
         }
     }
 
