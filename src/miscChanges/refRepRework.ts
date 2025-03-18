@@ -4,6 +4,7 @@ import { LocationLifecycleService } from "@spt/services/LocationLifecycleService
 import { IPmcData } from "@spt/models/eft/common/IPmcData";
 import { IEndLocalRaidRequestData } from "@spt/models/eft/match/IEndLocalRaidRequestData";
 import { IVictim } from "@spt/models/eft/common/tables/IBotBase";
+import { ISptProfile } from "@spt/models/eft/profile/ISptProfile";
 
 export function gainRefRepOnKill(context: Context, container: DependencyContainer): void
 {
@@ -12,15 +13,33 @@ export function gainRefRepOnKill(context: Context, container: DependencyContaine
     {
         // We want to replace the original method logic with something different
         const old = (result as any).handlePostRaidPmc.bind(result);
-        (result as any).handlePostRaidPmc = (sessionId: string, pmcProfile: IPmcData, scavProfile: IPmcData, isDead: boolean, isSurvived: boolean, isTransfer: boolean, request: IEndLocalRaidRequestData, locationName: string) =>
+        (result as any).handlePostRaidPmc = (sessionId: string, fullProfile: ISptProfile, scavProfile: IPmcData, isDead: boolean, isSurvived: boolean, isTransfer: boolean, request: IEndLocalRaidRequestData, locationName: string) =>
         {
-            old(sessionId, pmcProfile, scavProfile, isDead, isSurvived, isTransfer, request, locationName); //Add old logic back in
+            old(sessionId, fullProfile, scavProfile, isDead, isSurvived, isTransfer, request, locationName); //Add old logic back in
 
-            //Filter PMC kills
-            const pmcKills = pmcProfile?.Stats.Eft.Victims.filter(
-                (victim) => ["pmcbear", "pmcusec"].includes(victim.Role.toLowerCase()));
+            let pmcKills: IVictim[] = [];
 
-            pmcProfile.TradersInfo["6617beeaa9cfa777ca915b7c"].standing += repByKills(pmcKills, context);
+            try
+            {
+                //Filter PMC kills
+                pmcKills = request.results.profile.Stats.Eft.Victims.filter(
+                    (victim) => ["pmcbear", "pmcusec"].includes(victim.Role.toLowerCase()));
+            } 
+            catch (error)
+            {
+                this.context.logger.error("Error Details:" + "Something went wrong when trying to tally up PMC kills!");
+                this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+            }
+
+            try 
+            {
+                fullProfile.characters.pmc.TradersInfo["6617beeaa9cfa777ca915b7c"].standing += repByKills(pmcKills, context);
+            }
+            catch (error)
+            {
+                this.context.logger.error("Error Details:" + "Something went wrong when trying add Ref rep for PMC kills!");
+                this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+            }
             
         };
         // The modifier Always makes sure this replacement method is ALWAYS replaced

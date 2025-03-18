@@ -72,9 +72,18 @@ export function removeFirFromRepeatables(context: Context, container: Dependency
         {
             const condition: IQuestCondition = old(itemTpl, value); //Add old logic back in
 
-            condition.onlyFoundInRaid = false;
-           
-            return condition;
+            try
+            {
+                condition.onlyFoundInRaid = false;
+            
+                return condition;
+            }
+            catch (error)
+            {
+                this.context.logger.error("Error Details:" + "Something went wrong when trying set FiR requirement to false for repeatable quests!");
+                this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+                return condition;
+            }
         };
         // The modifier Always makes sure this replacement method is ALWAYS replaced
     }, {frequency: "Always"});
