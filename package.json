@@ -2,8 +2,12 @@
     "name": "gekos_betterprogression",
     "version": "0.3.0",
     "sptVersion": "~3.11",
-    "loadBefore": [],
-    "loadAfter": [],
+    "loadBefore": [
+        "DewardianDev-AlgorithmicLevelProgression"
+    ],
+    "loadAfter": [
+        "MoxoPixel-Painter - Trader"
+    ],
     "incompatibilities": [],
     "isBundleMod": false,
     "main": "src/mod.js",
