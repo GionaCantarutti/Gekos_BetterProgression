@@ -50,9 +50,9 @@ export function removeFirFromHideout(context: Context): void
 
     const hideoutAreas = context.tables.hideout.areas;
 
-    for (const area of hideoutAreas)
+    for (const area of hideoutAreas) for (const stage of Object.values(area.stages))
     {
-        const itemReq = area.requirements.filter((req) => req.type == "Item");
+        const itemReq = stage.requirements.filter((req) => req.type == "Item");
 
         for (const req of itemReq as IStageRequirement[])
         {

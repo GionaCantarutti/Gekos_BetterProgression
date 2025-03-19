@@ -522,6 +522,8 @@
     "skillChanges": {
         "enable": true,
 
+        //With these default settings Metabolism levels super fast but fixing that is harder than it might seem. Planned for a future version
+
         //Multiply earned skill XP by this much if it's fresh XP (XP for a skill you haven't level recently this raid)
         "SkillFreshEffectiveness": 2,
         //How many full skill points are considered to be fresh
