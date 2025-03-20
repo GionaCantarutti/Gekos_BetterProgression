@@ -16,7 +16,7 @@ import { changeHidehoutBuildCosts } from "./miscChanges/buildChanges";
 import { changeSkills } from "./miscChanges/skills";
 import { ItemHelper } from "@spt/helpers/ItemHelper";
 import { changeCrafts } from "./miscChanges/craftChanges";
-import { gainRefRepOnKill } from "./miscChanges/refRepRework";
+import { addSupportForGPTraders, gainRefRepOnKill, makeRefBuyForGP } from "./miscChanges/refRepRework";
 import { buffSICCCase } from "./miscChanges/buffSICCCase";
 import { removeFirFromFlea, removeFirFromHideout, removeFirFromQuests, removeFirFromRepeatables } from "./miscChanges/firChanges";
 import { addCustomTrades } from "./miscChanges/customTrades";
@@ -29,6 +29,7 @@ import { PresetController } from "@spt/controllers/PresetController";
 import { setStartingReputation } from "./miscChanges/startingRep";
 import { PreSptModLoader } from "@spt/loaders/PreSptModLoader";
 import { join } from "path";
+import { StaticRouterModService } from "@spt/services/mod/staticRouter/StaticRouterModService";
 
 class Mod implements IPostDBLoadMod, IPreSptLoadMod
 {
@@ -41,6 +42,8 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
         this.context.logger = new LoggerWrapper(container.resolve<ILogger>("WinstonLogger"), preLoader);
 
         this.safelyReadConfig();
+
+        this.setupRouterForClientSideData(container);
 
         this.safeApplyEarlyModifications(container);
     }
@@ -59,6 +62,38 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
     }
 
     ///////////////////////////////////////////////////////////////////////////
+
+    setupRouterForClientSideData(container: DependencyContainer): void
+    {
+        const staticRouter = container.resolve<StaticRouterModService>("StaticRouterModService");
+
+        try
+        {
+            staticRouter.registerStaticRouter(
+                "statsconfigrouter",
+                [
+                    {
+                        url: "/server-config-router/statsconfig",
+                        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                        action: (_url: string, _info: any, _sessionID: string, _output: string): Promise<string> =>
+                        {
+                            return Promise.resolve(JSON.stringify({response: this.context.config.skillChanges.ClientConfigs}));
+                        }
+                    }
+                ],
+                "statsconfig"
+            )
+        }
+        catch (error)
+        {
+            this.context.logger.error("Failed to send skills config data over to the client!");
+            if (this.context.config.dev.showFullError)
+            {
+                this.context.logger.error("Error Details:" + error);
+                this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+            }
+        }
+    }
 
     safeApplyEarlyModifications(container: DependencyContainer): void
     {

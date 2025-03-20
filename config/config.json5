@@ -532,6 +532,17 @@
         "SkillMinEffectiveness": 0.4,
         //How many points after fresh points before fatigue kicks in
         "SkillPointsBeforeFatigue": 1,
+
+        //Configs to be sent to the client-side mod
+        "ClientConfigs": {
+            //Flat out multiply the amount of xp earned for skills
+            "GlobalXPMultiplier": 1,
+            //Specific multipliers per-skill. If unspecified it's taken to be 1
+            //Both global and specific multipliers apply, this does NOT override the global
+            "SkillXPMultipliers": {
+                "Metabolism" : 0.125,
+            }
+        }
     },
 
     //Gain standing/rep for Ref every time you get a PMC kill

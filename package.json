@@ -1,6 +1,6 @@
 {
     "name": "gekos_betterprogression",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "sptVersion": "~3.11",
     "loadBefore": [
         "DewardianDev-AlgorithmicLevelProgression"
