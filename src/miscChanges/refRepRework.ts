@@ -5,6 +5,29 @@ import { IPmcData } from "@spt/models/eft/common/IPmcData";
 import { IEndLocalRaidRequestData } from "@spt/models/eft/match/IEndLocalRaidRequestData";
 import { IVictim } from "@spt/models/eft/common/tables/IBotBase";
 import { ISptProfile } from "@spt/models/eft/profile/ISptProfile";
+import { TraderController } from "@spt/controllers/TraderController";
+
+export function addSupportForGPTraders(context: Context, container: DependencyContainer): void
+{
+    container.afterResolution("TraderController", (_t, result: TraderController) =>
+    {
+        // We want to replace the original method logic with something different
+        const old = result.getItemPrices.bind(result);
+        result.getItemPrices = (sessionId: string, traderId: string) =>
+        {
+            const oldOut = old(sessionId, traderId); //Add old logic back in
+
+            oldOut.currencyCourses["5d235b4d86f7742e017bc88a"] = 7500; //ToDo: configurable?
+            
+            return oldOut;
+        };
+    }, {frequency: "Always"});
+}
+
+export function makeRefBuyForGP(context: Context): void
+{
+    context.tables.traders["6617beeaa9cfa777ca915b7c"].base.currency = "GP";
+}
 
 export function gainRefRepOnKill(context: Context, container: DependencyContainer): void
 {

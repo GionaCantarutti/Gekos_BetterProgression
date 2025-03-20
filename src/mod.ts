@@ -124,6 +124,22 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
                 this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
             }
         }
+
+        //For ref buying items for GP coins. Requires client patching for fixing wrong GP icon
+        try
+        {
+            if (this.context.config.misc.refBuysDogtagsForGP) addSupportForGPTraders(this.context, container);
+        }
+        catch (error)
+        {
+            this.context.logger.error("Failed to patch in support for GP trading!");
+            if (this.context.config.dev.showFullError)
+            {
+                this.context.logger.error("Error Details:" + error);
+                this.context.logger.error("Stack Trace:\n" + (error instanceof Error ? error.stack : "No stack available"));
+            }
+        }
+        
     }
 
     safelyReadConfig(): void
@@ -202,6 +218,10 @@ class Mod implements IPostDBLoadMod, IPreSptLoadMod
 
         log?.info("Setting initial trader standing...");
         this.safelyRunIf(cfg.bitcoinChanges.enable, () => setStartingReputation(this.context), "Failed to set initial trader standing!");
+        log?.info("Done!");
+
+        log?.info("Changing Ref to purchasing dogtags for GP...");
+        this.safelyRunIf(cfg.misc.refBuysDogtagsForGP, () => makeRefBuyForGP(this.context), "Failed changing Ref to purchasing dogtags for GP!");
         log?.info("Done!");
     }
 

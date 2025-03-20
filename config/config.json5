@@ -624,6 +624,9 @@
         "removeFirFromHideout": true,
         "removeFirFromFlea": true,
 
+        //If true Ref will only buy dogtags but it will buy them for GP coins
+        "refBuysDogtagsForGP": true,
+
         //Multiply amounts of crafted products and crafting times in hideout
         "craftProductMultiplier": 2,
         "craftTimeMultiplier": 0.5,
